@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/internal/alter_node.gd" id="1_node"]
+
+[node name="AlterNode" type="Node2D"]
+script = ExtResource("1_node")
+
+[node name="NameLabel" type="Label" parent="."]
+offset_left = -80.0
+offset_top = 50.0
+offset_right = 80.0
+offset_bottom = 74.0
+horizontal_alignment = 1
+text = "Name"
+
+[node name="RoleLabel" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0.7)
+offset_left = -80.0
+offset_top = 74.0
+offset_right = 80.0
+offset_bottom = 94.0
+horizontal_alignment = 1
+text = "Role"

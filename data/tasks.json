@@ -1,0 +1,16 @@
+{
+	"tasks": {
+		"job_interview": {
+			"title": "The job interview",
+			"prompt": "An interview, this afternoon. Who should step forward?",
+			"required_skill": "composure",
+			"time_cost": 40,
+			"outcomes": {
+				"iris": {"tier": "best", "align": 2, "branch": "ext_outcome_iris"},
+				"june": {"tier": "ok", "align": 1, "branch": "ext_outcome_june"},
+				"rowan": {"tier": "strain", "align": 0, "branch": "ext_outcome_rowan"}
+			},
+			"default_branch": "ext_outcome_june"
+		}
+	}
+}

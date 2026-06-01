@@ -1,0 +1,11 @@
+{
+	"status_thresholds": {"broken": 20, "strained": 50, "healthy": 100},
+	"relationships": [
+		{"from": "iris", "to": "rowan", "affinity": 25, "status": "strained"},
+		{"from": "iris", "to": "june", "affinity": 80, "status": "healthy"},
+		{"from": "rowan", "to": "june", "affinity": 60, "status": "healthy"},
+		{"from": "manager", "to": "iris", "affinity": 70, "status": "healthy"},
+		{"from": "manager", "to": "rowan", "affinity": 55, "status": "healthy"},
+		{"from": "manager", "to": "june", "affinity": 75, "status": "healthy"}
+	]
+}

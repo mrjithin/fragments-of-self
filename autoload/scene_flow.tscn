@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://autoload/scene_flow.gd" id="1_flow"]
+
+[node name="SceneFlow" type="Node"]
+script = ExtResource("1_flow")
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="Fade" type="ColorRect" parent="Overlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.164706, 0.121569, 0.101961, 1)

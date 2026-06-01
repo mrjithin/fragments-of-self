@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/external/external_world.gd" id="1_ext"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="2_box"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/did_fact_popup.tscn" id="4_fact"]
+[ext_resource type="PackedScene" path="res://scenes/ui/memory_reveal.tscn" id="5_mem"]
+
+[node name="ExternalWorld" type="Node2D"]
+script = ExtResource("1_ext")
+
+[node name="BgLayer" type="CanvasLayer" parent="."]
+layer = -10
+
+[node name="Background" type="ColorRect" parent="BgLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.886275, 0.701961, 0.482353, 1)
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="DialogueBox" parent="UILayer" instance=ExtResource("2_box")]
+unique_name_in_owner = true
+
+[node name="HUD" parent="UILayer" instance=ExtResource("3_hud")]
+unique_name_in_owner = true
+
+[node name="DidFactPopup" parent="UILayer" instance=ExtResource("4_fact")]
+
+[node name="MemoryReveal" parent="UILayer" instance=ExtResource("5_mem")]

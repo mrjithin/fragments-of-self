@@ -1,0 +1,42 @@
+{
+	"start": "cf_1",
+	"pair": ["iris", "rowan"],
+	"nodes": {
+		"cf_1": {
+			"speaker": "Rowan",
+			"text": "Iris always shuts me down. Every time I want to push, to try, she slams the door.",
+			"next": "cf_2"
+		},
+		"cf_2": {
+			"speaker": "Iris",
+			"text": "Because last time we ‘tried’, we got hurt. I was the one who had to hold us together afterward.",
+			"next": "cf_choice"
+		},
+		"cf_choice": {
+			"speaker": "You",
+			"text": "They are both afraid of the same thing. How do you help them meet in the middle?",
+			"choices": [
+				{
+					"text": "Name what you both fear.",
+					"next": "cf_good",
+					"consequence": {"affinity": {"pair": "iris:rowan", "delta": 30}, "align": 1}
+				},
+				{
+					"text": "Tell Rowan to just back off.",
+					"next": "cf_bad",
+					"consequence": {"affinity": {"pair": "iris:rowan", "delta": -10}}
+				}
+			]
+		},
+		"cf_good": {
+			"speaker": "Narration",
+			"text": "Something eases. \"I don't want us hurt either,\" Rowan says quietly. Iris nods. The bond between them steadies.",
+			"next": "END_CONFLICT"
+		},
+		"cf_bad": {
+			"speaker": "Narration",
+			"text": "Rowan goes quiet — not resolved, just pushed down. The tension is still there. (Try again.)",
+			"next": "cf_choice"
+		}
+	}
+}

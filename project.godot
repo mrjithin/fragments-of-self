@@ -13,6 +13,29 @@ config_version=5
 config/name="Fragments Of Self"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+run/main_scene="res://scenes/ui/title_screen.tscn"
+
+[autoload]
+
+EventBus="*res://autoload/event_bus.gd"
+GameState="*res://autoload/game_state.gd"
+GameClock="*res://autoload/game_clock.gd"
+RNG="*res://autoload/rng.gd"
+DIDFacts="*res://autoload/did_facts.gd"
+SaveManager="*res://autoload/save_manager.gd"
+Music="*res://autoload/music.gd"
+SceneFlow="*res://autoload/scene_flow.tscn"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[gui]
+
+theme/custom="res://assets/ui/theme.tres"
 
 [physics]
 

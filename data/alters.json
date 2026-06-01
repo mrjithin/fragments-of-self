@@ -1,0 +1,44 @@
+{
+	"alters": [
+		{
+			"id": "manager",
+			"name": "You",
+			"role": "The Manager",
+			"skills": ["coordination"],
+			"stress": 10,
+			"triggers": [],
+			"color": "#c9a86a",
+			"graph_pos": {"x": 0, "y": -170}
+		},
+		{
+			"id": "iris",
+			"name": "Iris",
+			"role": "The Protector",
+			"skills": ["composure", "boundaries"],
+			"stress": 35,
+			"triggers": ["raised voices"],
+			"color": "#9a6b9d",
+			"graph_pos": {"x": -210, "y": 10}
+		},
+		{
+			"id": "rowan",
+			"name": "Rowan",
+			"role": "The Achiever",
+			"skills": ["focus", "planning"],
+			"stress": 80,
+			"triggers": ["deadlines"],
+			"color": "#cf7a4e",
+			"graph_pos": {"x": 210, "y": -20}
+		},
+		{
+			"id": "june",
+			"name": "June",
+			"role": "The Caretaker",
+			"skills": ["empathy", "listening"],
+			"stress": 25,
+			"triggers": ["conflict"],
+			"color": "#6f9a7b",
+			"graph_pos": {"x": 0, "y": 150}
+		}
+	]
+}

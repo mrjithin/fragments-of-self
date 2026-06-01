@@ -1,0 +1,46 @@
+{
+	"start": "ext_intro_1",
+	"task_id": "job_interview",
+	"nodes": {
+		"ext_intro_1": {
+			"speaker": "Narration",
+			"text": "Morning light spills across the kitchen table. A letter waits there, already opened.",
+			"next": "ext_intro_2"
+		},
+		"ext_intro_2": {
+			"speaker": "Narration",
+			"text": "An interview. This afternoon. The first real chance in months.",
+			"next": "ext_intro_3"
+		},
+		"ext_intro_3": {
+			"speaker": "Narration",
+			"text": "Their chest tightens. So much depends on the next few hours. Who should step forward to face it?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"ext_outcome_iris": {
+			"speaker": "Iris",
+			"text": "A steady breath. \"Thank you for seeing me today.\" The words come out calm and sure. The room settles, and so does the interviewer.",
+			"on_enter": {"unlock_memory": "m_treehouse", "surface_fact": "f_switching", "align": 2},
+			"next": "ext_done"
+		},
+		"ext_outcome_june": {
+			"speaker": "June",
+			"text": "Warm, a little nervous, but genuinely kind. The conversation finds its footing, and it goes okay.",
+			"on_enter": {"unlock_memory": "m_treehouse", "surface_fact": "f_switching", "align": 1},
+			"next": "ext_done"
+		},
+		"ext_outcome_rowan": {
+			"speaker": "Rowan",
+			"text": "Sharp, overprepared, every answer rehearsed twice. The pressure shows in clipped words. It's bumpy, but they get through it.",
+			"on_enter": {"unlock_memory": "m_treehouse", "surface_fact": "f_switching", "align": 0},
+			"next": "ext_done"
+		},
+		"ext_done": {
+			"speaker": "Narration",
+			"text": "They step back out into the autumn light. Whatever comes of it, today they showed up. The day winds down.",
+			"next": "END_DAY"
+		}
+	}
+}
