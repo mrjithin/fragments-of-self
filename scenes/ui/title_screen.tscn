@@ -1,12 +1,16 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/title_screen.gd" id="1_title"]
+[ext_resource type="Texture2D" path="res://assets/art/bg_title.png" id="2_bg"]
+[ext_resource type="PackedScene" path="res://scenes/ui/leaf_fall.tscn" id="3_leaf"]
+[ext_resource type="FontFile" path="res://assets/fonts/Silkscreen.ttf" id="4_silk"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_game_title"]
-font_size = 56
-font_color = Color(0.93, 0.78, 0.55, 1)
-shadow_size = 6
-shadow_color = Color(0, 0, 0, 0.35)
+font = ExtResource("4_silk")
+font_size = 38
+font_color = Color(0.96, 0.86, 0.66, 1)
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.45)
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
@@ -17,14 +21,20 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_title")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.301961, 0.211765, 0.176471, 1)
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="Leaves" parent="." instance=ExtResource("3_leaf")]
 
 [node name="Menu" type="VBoxContainer" parent="."]
 layout_mode = 1

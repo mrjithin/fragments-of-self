@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scenes/internal/internal_mind.gd" id="1_mind"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="2_box"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="Texture2D" path="res://assets/art/bg_internal.png" id="4_bg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sidebar"]
 content_margin_left = 16.0
@@ -23,14 +24,17 @@ script = ExtResource("1_mind")
 [node name="BgLayer" type="CanvasLayer" parent="."]
 layer = -10
 
-[node name="Background" type="ColorRect" parent="BgLayer"]
+[node name="Background" type="TextureRect" parent="BgLayer"]
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.184314, 0.152941, 0.196078, 1)
+texture = ExtResource("4_bg")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="GraphContainer" type="Node2D" parent="."]
 position = Vector2(800, 384)

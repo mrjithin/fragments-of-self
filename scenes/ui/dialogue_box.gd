@@ -8,6 +8,9 @@ signal choice_selected(index: int)
 
 const TYPE_CHARS_PER_SEC: float = 45.0
 
+const PORTRAIT_PATH: String = "res://assets/art/portrait_%s.png"
+
+@onready var _portrait: TextureRect = %SpeakerPortrait
 @onready var _speaker: Label = %SpeakerLabel
 @onready var _body: RichTextLabel = %BodyLabel
 @onready var _choices: VBoxContainer = %ChoiceList
@@ -30,8 +33,23 @@ func show_node(node: DialogueNode) -> void:
 	_hint.visible = false
 	_speaker.text = node.speaker
 	_speaker.visible = node.speaker != ""
+	_set_speaker_portrait(node.speaker)
 	_body.text = node.text
 	_start_typewriter()
+
+
+## Show the speaking alter's pixel portrait when the speaker names one ("You" maps to
+## the manager). Narration and other voices hide the portrait.
+func _set_speaker_portrait(speaker: String) -> void:
+	var key: String = speaker.to_lower()
+	if key == "you":
+		key = "manager"
+	var path: String = PORTRAIT_PATH % key
+	if speaker != "" and ResourceLoader.exists(path):
+		_portrait.texture = load(path)
+		_portrait.visible = true
+	else:
+		_portrait.visible = false
 
 
 func _start_typewriter() -> void:

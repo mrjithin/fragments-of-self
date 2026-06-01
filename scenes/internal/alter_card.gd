@@ -12,12 +12,15 @@ signal assign_pressed(alter_id: String)
 const CALM_FILL: Color = Color(0.45, 0.62, 0.48)
 const STRESS_FILL: Color = Color(0.85, 0.45, 0.35)
 
-@onready var _name: Label = $Margin/VBox/NameLabel
-@onready var _headline: Label = $Margin/VBox/HeadlineLabel
+@onready var _portrait: TextureRect = $Margin/VBox/Top/Portrait
+@onready var _name: Label = $Margin/VBox/Top/Info/NameLabel
+@onready var _headline: Label = $Margin/VBox/Top/Info/HeadlineLabel
 @onready var _stress_bar: ProgressBar = $Margin/VBox/StressBar
 @onready var _talk: Button = $Margin/VBox/Buttons/TalkButton
 @onready var _rest: Button = $Margin/VBox/Buttons/RestButton
 @onready var _assign: Button = $Margin/VBox/Buttons/AssignButton
+
+const PORTRAIT_PATH: String = "res://assets/art/portrait_%s.png"
 
 var alter_id: String = ""
 var _primary_skill: String = ""
@@ -31,6 +34,10 @@ func setup(alter: Alter) -> void:
 	_primary_skill = alter.skills[0] if not alter.skills.is_empty() else "—"
 	_name.text = "%s · %s" % [alter.name, alter.role]
 	_name.add_theme_color_override("font_color", alter.color)
+
+	var tex: Texture2D = load(PORTRAIT_PATH % alter.id)
+	if tex != null:
+		_portrait.texture = tex
 
 	_base_box = get_theme_stylebox("panel")
 	_sel_box = preload("res://scenes/internal/card_selected.tres")

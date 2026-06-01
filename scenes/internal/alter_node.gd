@@ -2,16 +2,18 @@ extends Node2D
 ## A single alter on the mind graph. Drawn procedurally (no art needed): a soft halo
 ## whose colour/pulse reflects stress, a coloured portrait disc, name + role labels.
 
-const PORTRAIT_RADIUS: float = 40.0
+const PORTRAIT_SIZE: float = 56.0
 const HALO_RADIUS: float = 52.0
 const CALM_COLOR: Color = Color(0.43, 0.6, 0.48)      # soft green
 const STRESS_COLOR: Color = Color(0.85, 0.5, 0.32)    # warm amber
+const PORTRAIT_PATH: String = "res://assets/art/portrait_%s.png"
 
 @onready var _name_label: Label = $NameLabel
 @onready var _role_label: Label = $RoleLabel
 
 var alter_id: String = ""
 var _alter: Alter
+var _portrait: Texture2D
 var _selected: bool = false
 var _pulse: float = 0.0
 var _pulse_tween: Tween
@@ -21,6 +23,8 @@ func setup(alter: Alter) -> void:
 	_alter = alter
 	alter_id = alter.id
 	position = alter.graph_pos
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_portrait = load(PORTRAIT_PATH % alter.id)
 	_name_label.text = alter.name
 	_role_label.text = alter.role
 	EventBus.alter_stress_changed.connect(_on_stress_changed)
@@ -76,6 +80,7 @@ func _draw() -> void:
 	# Selection ring.
 	if _selected:
 		draw_arc(Vector2.ZERO, HALO_RADIUS + 8.0, 0.0, TAU, 48, Color(0.95, 0.82, 0.5, 0.9), 3.0, true)
-	# Portrait disc + rim.
-	draw_circle(Vector2.ZERO, PORTRAIT_RADIUS, _alter.color)
-	draw_arc(Vector2.ZERO, PORTRAIT_RADIUS, 0.0, TAU, 48, Color(0, 0, 0, 0.25), 2.0, true)
+	# Pixel-art portrait, centred.
+	if _portrait != null:
+		var s: float = PORTRAIT_SIZE
+		draw_texture_rect(_portrait, Rect2(-s * 0.5, -s * 0.5, s, s), false)

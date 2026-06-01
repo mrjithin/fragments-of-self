@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/day_end_summary.gd" id="1_end"]
+[ext_resource type="Texture2D" path="res://assets/art/bg_title.png" id="2_bg"]
+[ext_resource type="FontFile" path="res://assets/fonts/Silkscreen.ttf" id="3_silk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 content_margin_left = 36.0
@@ -19,7 +21,8 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
-font_size = 30
+font = ExtResource("3_silk")
+font_size = 22
 font_color = Color(0.91, 0.71, 0.43, 1)
 
 [node name="DayEndSummary" type="Control"]
@@ -31,14 +34,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_end")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.301961, 0.211765, 0.176471, 1)
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Card" type="PanelContainer" parent="."]
 layout_mode = 1

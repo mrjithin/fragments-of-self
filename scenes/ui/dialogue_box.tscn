@@ -46,19 +46,35 @@ grow_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBox" type="VBoxContainer" parent="Panel"]
+[node name="HBox" type="HBoxContainer" parent="Panel"]
 layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="SpeakerPortrait" type="TextureRect" parent="Panel/HBox"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBox" type="VBoxContainer" parent="Panel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="SpeakerLabel" type="Label" parent="Panel/VBox"]
+[node name="SpeakerLabel" type="Label" parent="Panel/HBox/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 text = "Speaker"
 label_settings = SubResource("LabelSettings_speaker")
 
-[node name="BodyLabel" type="RichTextLabel" parent="Panel/VBox"]
+[node name="BodyLabel" type="RichTextLabel" parent="Panel/HBox/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
@@ -69,13 +85,13 @@ text = "Body text"
 fit_content = true
 scroll_active = false
 
-[node name="ChoiceList" type="VBoxContainer" parent="Panel/VBox"]
+[node name="ChoiceList" type="VBoxContainer" parent="Panel/HBox/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="ContinueHint" type="Label" parent="Panel/VBox"]
+[node name="ContinueHint" type="Label" parent="Panel/HBox/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
