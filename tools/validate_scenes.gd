@@ -13,6 +13,7 @@ const SCENES: Array[String] = [
 	"res://scenes/ui/memory_reveal.tscn",
 	"res://scenes/ui/did_fact_popup.tscn",
 	"res://scenes/internal/alter_node.tscn",
+	"res://scenes/internal/alter_card.tscn",
 ]
 
 

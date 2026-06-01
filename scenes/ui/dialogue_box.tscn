@@ -43,15 +43,18 @@ offset_right = -48.0
 offset_bottom = -32.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 10
 
 [node name="SpeakerLabel" type="Label" parent="Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 text = "Speaker"
 label_settings = SubResource("LabelSettings_speaker")
 
@@ -60,6 +63,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 bbcode_enabled = true
 text = "Body text"
 fit_content = true
@@ -68,11 +72,13 @@ scroll_active = false
 [node name="ChoiceList" type="VBoxContainer" parent="Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 6
 
 [node name="ContinueHint" type="Label" parent="Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
+mouse_filter = 2
 modulate = Color(1, 1, 1, 0.55)
 text = "▾  click to continue"
