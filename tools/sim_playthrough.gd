@@ -121,7 +121,7 @@ func _ready() -> void:
 
 	# --- #1 multi-day loop ---
 	var days: Array = JsonLoader.load_dict("res://data/days.json").get("days", [])
-	_check("run has 3 days configured", days.size() == 3)
+	_check("run has 4 days configured", days.size() == 4)
 
 	GameState.advance_day()
 	_check("advanced to day 2", GameState.day == 2)

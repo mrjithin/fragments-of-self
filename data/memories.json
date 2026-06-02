@@ -14,6 +14,11 @@
 			"title": "The Kitchen Doorway",
 			"text": "A child in a doorway, learning the rhythm of the house — when it was safe to speak, when it was safer to go quiet and small. The first time someone steady stepped forward so the child wouldn't have to.",
 			"mystery_tag": "origin"
+		},
+		"m_first_words": {
+			"title": "The First 'We'",
+			"text": "A page of a childhood journal, the handwriting changing halfway down. 'We' instead of 'I' — not a mistake, but a truce. The moment the inside ones agreed, quietly, to keep each other safe.",
+			"mystery_tag": "origin"
 		}
 	}
 }

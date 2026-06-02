@@ -47,6 +47,18 @@
 				"june": {"tier": "strain", "align": 0, "branch": "d3_out_june"}
 			},
 			"default_branch": "d3_out_rowan"
+		},
+		"the_appointment": {
+			"title": "The appointment",
+			"prompt": "A first session with someone new. Who speaks for the system?",
+			"required_skill": "listening",
+			"time_cost": 40,
+			"outcomes": {
+				"june": {"tier": "best", "align": 2, "branch": "d4_out_june"},
+				"iris": {"tier": "ok", "align": 1, "branch": "d4_out_iris"},
+				"rowan": {"tier": "strain", "align": 0, "branch": "d4_out_rowan"}
+			},
+			"default_branch": "d4_out_iris"
 		}
 	}
 }

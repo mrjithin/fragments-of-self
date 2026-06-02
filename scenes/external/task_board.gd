@@ -25,6 +25,18 @@ func _ready() -> void:
 		_apply_day_setup(cfg.get("setup", {}))
 		GameState.set_flag("day_setup_done")
 
+	# Roll the day's random event once (weighted, non-repeating, RNG-seeded).
+	if not GameState.has_flag("day_event_done"):
+		var pool := EventPool.new()
+		pool.load_data()
+		var ev: GameEvent = pool.roll(GameState.day)
+		GameState.set_flag("day_event_done")
+		if ev != null:
+			GameState.current_event_text = ev.text
+			if ev.fact != "":
+				GameState.record_fact(ev.fact)
+				EventBus.did_fact_surfaced.emit(ev.fact)
+
 	_build_ui(cfg.get("tasks", []))
 
 	GameState.current_scene = scene_file_path
@@ -83,6 +95,12 @@ func _build_ui(task_paths: Array) -> void:
 	_time_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(_time_label)
 	_refresh_time()
+
+	# The day's random event — a quiet flavour beat that varies per playthrough.
+	if GameState.current_event_text != "":
+		var ev_label := _label(GameState.current_event_text, 14, COL_TEXT)
+		ev_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		col.add_child(ev_label)
 
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 10)

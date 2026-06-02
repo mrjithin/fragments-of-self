@@ -20,7 +20,7 @@ func _check(label: String, ok: bool) -> void:
 func _ready() -> void:
 	print("=== sim_day3: data-only Day 3 ===")
 	var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
-	_check("run now has 3 days configured", days.size() == 3)
+	_check("run has at least 3 days configured", days.size() >= 3)
 
 	# --- Boot straight into day 3 and apply its setup (mirrors task_board._ready) ---
 	GameState.reset_run()
@@ -69,8 +69,8 @@ func _ready() -> void:
 	_check("outcome ends the task (END_TASK)",
 		situation.get("nodes", {}).get("d3_done", {}).get("next", "") == "END_TASK")
 
-	# --- Day 3 is the finale ---
-	_check("day 3 is the final day", GameState.day >= maxi(1, days.size()))
+	# --- Day 3 sits mid-arc; the day-end screen offers "Continue to Day 4" ---
+	_check("day 3 is not the finale (more days follow)", GameState.day < days.size())
 
 	print("=== sim_day3 done, failures: %d ===" % _fail)
 	await get_tree().process_frame

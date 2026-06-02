@@ -1,0 +1,46 @@
+{
+	"start": "d4_intro_1",
+	"task_id": "the_appointment",
+	"nodes": {
+		"d4_intro_1": {
+			"speaker": "Narration",
+			"text": "A waiting room that smells of tea and old paper. A new name on the door — someone who, the leaflet says, works with people like them.",
+			"next": "d4_intro_2"
+		},
+		"d4_intro_2": {
+			"speaker": "Narration",
+			"text": "No one is in trouble here. No line to hold, no crisis to fix. Only a quiet question: who wants to speak, and be heard?",
+			"next": "d4_intro_3"
+		},
+		"d4_intro_3": {
+			"speaker": "Narration",
+			"text": "The door opens. Who steps in first?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"d4_out_june": {
+			"speaker": "June",
+			"text": "She speaks softly, for all of them. \"There's more than one of us. We're learning to listen to each other.\" The therapist only nods, unsurprised, and something inside unclenches.",
+			"on_enter": {"unlock_memory": "m_first_words", "surface_fact": "f_treatment", "align": 2},
+			"next": "d4_done"
+		},
+		"d4_out_iris": {
+			"speaker": "Iris",
+			"text": "Measured, careful, watching for danger that doesn't come. The words are honest, if guarded — and being believed is its own small relief.",
+			"on_enter": {"unlock_memory": "m_first_words", "surface_fact": "f_treatment", "align": 1},
+			"next": "d4_done"
+		},
+		"d4_out_rowan": {
+			"speaker": "Rowan",
+			"text": "He arrives with a plan and a list of goals, eager to fix what isn't broken. Slowly he notices: no one is grading this. He sits back, just a little.",
+			"on_enter": {"unlock_memory": "m_first_words", "surface_fact": "f_treatment", "align": 0},
+			"next": "d4_done"
+		},
+		"d4_done": {
+			"speaker": "Narration",
+			"text": "They step back into the street, lighter somehow. Being known — really known — turns out not to be the danger they once learned it was.",
+			"next": "END_TASK"
+		}
+	}
+}
