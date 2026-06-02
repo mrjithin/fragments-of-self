@@ -94,3 +94,11 @@ Core data models to define (`class_name` resources):
 5. Assignment loop tying alters → tasks, with relationship effects.
 6. One mini-game + one memory unlock to prove the mystery loop.
 7. Day cycle + HUD + save/load → vertical slice / first-playable.
+
+## Status (implemented so far)
+
+Steps 1–7 are done; the slice now runs a 4-day arc (`data/days.json`, content added data-only). Beyond the slice:
+
+- **Randomness (first cut)** — `RNG.weighted_pick()` + a `GameEvent` model and `EventPool` system roll one weighted, non-repeating "event of the day" on the task board, surfacing a DID fact (info loop). Deterministic under the save seed; seen events persist in `GameState`. Data: `data/events.json`. Next: weighted *situation* events that change the day's task list.
+- **Scene-reactive audio** — the `Music` autoload crossfades a per-view ambient pad on `EventBus.scene_changed` (emitted by `SceneFlow`). Tracks are generated procedurally by `tools/gen_audio.gd` as `AudioStreamWAV` `.tres`.
+- **Dev tools** — `tools/sim_*.tscn` are headless checks (playthrough, resume, per-day content, events, audio); `tools/validate_scenes.gd` instantiates every scene; `tools/gen_*` regenerate art/audio assets.
