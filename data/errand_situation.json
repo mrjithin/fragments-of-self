@@ -5,11 +5,19 @@
 		"er_1": {
 			"speaker": "Narration",
 			"text": "A knock at the door. The neighbour's move is in an hour and the boxes won't fit the car — could they spare a pair of hands?",
-			"next": "er_2"
+			"next": "er_prep"
 		},
-		"er_2": {
+		"er_prep": {
 			"speaker": "Narration",
-			"text": "It's fiddly, tetris-like work, and the clock is ticking. Who's best suited to this?",
+			"text": "There's already a full day waiting behind this favour. How to meet it?",
+			"choices": [
+				{"text": "Pace it — help, but don't pour everything in.", "next": "er_into", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "Go all in — fast, thorough, no half measures.", "next": "er_into", "consequence": {"set_flag": "prep_pushed"}}
+			]
+		},
+		"er_into": {
+			"speaker": "Narration",
+			"text": "Boxes everywhere, a van half-loaded, the clock ticking down. It's fiddly, tetris-like work. Who's best suited to this?",
 			"choices": [
 				{"text": "Look inward…", "action": "enter_mind"}
 			]

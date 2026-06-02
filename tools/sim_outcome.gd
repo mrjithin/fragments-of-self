@@ -53,7 +53,7 @@ func _ready() -> void:
 	# C) Prep choice feeds the stress system: 'drill' lands harder than 'calm'.
 	await _play("june", calm, true, 0)
 	var june_neutral: int = GameState.alter_stress["june"]
-	GameState.reset_run(); GameState.set_flag("prepared_drill")
+	GameState.reset_run(); GameState.set_flag("prep_pushed")
 	GameClock.reset_day()
 	GameState.alter_stress = calm.duplicate()
 	GameState.relationship_affinity["iris|rowan"] = 80
@@ -62,7 +62,7 @@ func _ready() -> void:
 	var inst: Node = load(EXTERNAL).instantiate()
 	add_child(inst)
 	await get_tree().process_frame
-	_check("prep 'drill' adds more stress than neutral", GameState.alter_stress["june"] == june_neutral + 5)
+	_check("prep 'push' adds more stress than neutral", GameState.alter_stress["june"] == june_neutral + 5)
 	inst.queue_free()
 
 	print("=== sim_outcome done, failures: %d ===" % _fail)

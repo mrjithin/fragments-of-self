@@ -10,7 +10,15 @@
 		"d4_intro_2": {
 			"speaker": "Narration",
 			"text": "No one is in trouble here. No line to hold, no crisis to fix. Only a quiet question: who wants to speak, and be heard?",
-			"next": "d4_intro_3"
+			"next": "d4_prep"
+		},
+		"d4_prep": {
+			"speaker": "Narration",
+			"text": "The waiting-room clock ticks. How much to say, on a first day like this?",
+			"choices": [
+				{"text": "Share only what feels safe — small, true things.", "next": "d4_intro_3", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "Lay it all out — every part, every year, no filtering.", "next": "d4_intro_3", "consequence": {"set_flag": "prep_pushed"}}
+			]
 		},
 		"d4_intro_3": {
 			"speaker": "Narration",

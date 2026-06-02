@@ -83,11 +83,18 @@ func _play_outcome() -> void:
 	var extra_align: int = 0
 	var stress_add: int = 15                          # any task is tiring
 
-	# A mid-situation prep choice (e.g. day 1) shifts how hard the work lands.
-	if GameState.has_flag("prepared_calm"):
+	# A mid-situation choice shifts how the work lands: easing first costs nothing but
+	# gentleness; pushing buys a little more alignment now at the price of stress that
+	# compounds into later days. A genuine, non-obvious tradeoff.
+	if GameState.has_flag("prep_eased"):
 		stress_add -= 5
-	elif GameState.has_flag("prepared_drill"):
+		notes.append("Steadied beforehand, it landed a little softer.")
+	elif GameState.has_flag("prep_pushed"):
 		stress_add += 5
+		extra_align += 1
+		notes.append("They pushed hard — sharper today, but it'll cost them later.")
+	GameState.flags.erase("prep_eased")
+	GameState.flags.erase("prep_pushed")
 
 	if _task and alter and _task.required_skill != "" and alter.has_skill(_task.required_skill):
 		notes.append("%s played to their strength." % alter.name)

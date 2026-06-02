@@ -10,7 +10,15 @@
 		"d3_intro_2": {
 			"speaker": "Narration",
 			"text": "The old pull is there — to smooth it over, to make everyone comfortable. But comfort was never quite the same as safe.",
-			"next": "d3_intro_3"
+			"next": "d3_prep"
+		},
+		"d3_prep": {
+			"speaker": "Narration",
+			"text": "There's a moment, finger over the call button. How to walk into this?",
+			"choices": [
+				{"text": "Decide the limits now, while it's still quiet.", "next": "d3_intro_3", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "Rehearse every reply, brace for every angle.", "next": "d3_intro_3", "consequence": {"set_flag": "prep_pushed"}}
+			]
 		},
 		"d3_intro_3": {
 			"speaker": "Narration",
