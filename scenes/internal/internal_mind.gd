@@ -8,6 +8,7 @@ const ALTER_NODE: PackedScene = preload("res://scenes/internal/alter_node.tscn")
 const ALTER_CARD: PackedScene = preload("res://scenes/internal/alter_card.tscn")
 const CONFLICT_PATH: String = "res://data/conflict_dialogue.json"
 const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
+const TASK_BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
 
 const CONFLICT_TIME_COST: int = 20
 const REST_TIME_COST: int = 15
@@ -50,7 +51,9 @@ func _ready() -> void:
 	_update_objective()
 
 	# Autosave on entering this view so the run can be resumed from the title.
-	GameState.current_scene = scene_file_path
+	# Anchor the resume point to the day's task board (the durable hub) rather than
+	# this transient mid-handoff view — see external_world.gd for the rationale.
+	GameState.current_scene = TASK_BOARD_SCENE
 	SaveManager.save()
 
 

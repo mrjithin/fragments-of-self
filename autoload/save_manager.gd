@@ -12,6 +12,10 @@ func save() -> bool:
 		"version": SAVE_VERSION,
 		"rng_seed": RNG.seed_value,
 		"state": GameState.to_dict(),
+		"clock": {
+			"total": GameClock.budget_total,
+			"remaining": GameClock.budget_remaining,
+		},
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f == null:
@@ -40,6 +44,10 @@ func load() -> bool:
 		return false
 	RNG.set_seed(int(data.get("rng_seed", RNG.DEFAULT_SEED)))
 	GameState.from_dict(data.get("state", {}))
+	var clock: Dictionary = data.get("clock", {})
+	GameClock.load_state(
+		int(clock.get("total", GameClock.DEFAULT_BUDGET)),
+		int(clock.get("remaining", GameClock.DEFAULT_BUDGET)))
 	return true
 
 

@@ -34,7 +34,11 @@ func _ready() -> void:
 		_runner.start(_situation.get("start", ""))
 
 	# Autosave on entering this view so the run can be resumed from the title.
-	GameState.current_scene = scene_file_path
+	# Anchor the resume point to the day's task board (the durable hub) rather than
+	# this transient mid-task view — resuming there keeps completed tasks, alter
+	# stress, bonds, alignment and time intact without replaying a half-finished
+	# situation or rebuilding a mid-flight mind→world handoff.
+	GameState.current_scene = TASK_BOARD_SCENE
 	SaveManager.save()
 
 

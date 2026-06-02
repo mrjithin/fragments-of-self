@@ -14,6 +14,13 @@ func reset_day(total: int = DEFAULT_BUDGET) -> void:
 	EventBus.time_spent.emit(0, budget_remaining)
 
 
+## Restore a saved time budget (used by SaveManager on Continue) and refresh the HUD.
+func load_state(total: int, remaining: int) -> void:
+	budget_total = maxi(1, total)
+	budget_remaining = clampi(remaining, 0, budget_total)
+	EventBus.time_spent.emit(0, budget_remaining)
+
+
 func spend(amount: int) -> void:
 	budget_remaining = maxi(0, budget_remaining - amount)
 	EventBus.time_spent.emit(amount, budget_remaining)

@@ -9,6 +9,10 @@ var _player: AudioStreamPlayer
 
 
 func _ready() -> void:
+	# Keep playing while the tree is paused (the Esc overlay pauses everything else).
+	# Without this the ambient track silences itself on pause, so the pause-menu
+	# Sound toggle appears to do nothing — you're muting already-silent audio.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	# Loop the stream if the format supports it (Ogg/MP3 expose a `loop` property).
 	if "loop" in TRACK:
 		TRACK.set("loop", true)
