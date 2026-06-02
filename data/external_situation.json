@@ -39,8 +39,8 @@
 		},
 		"ext_done": {
 			"speaker": "Narration",
-			"text": "They step back out into the autumn light. Whatever comes of it, today they showed up. The day winds down.",
-			"next": "END_DAY"
+			"text": "They step back out into the autumn light. Whatever comes of it, today they showed up.",
+			"next": "END_TASK"
 		}
 	}
 }

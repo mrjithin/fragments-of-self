@@ -5,6 +5,7 @@ extends SceneTree
 
 const SCENES: Array[String] = [
 	"res://scenes/ui/title_screen.tscn",
+	"res://scenes/external/task_board.tscn",
 	"res://scenes/external/external_world.tscn",
 	"res://scenes/internal/internal_mind.tscn",
 	"res://scenes/ui/day_end_summary.tscn",

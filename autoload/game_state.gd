@@ -12,6 +12,16 @@ var flags: Dictionary = {}             # arbitrary scripted flags, e.g. "conflic
 # Handoff state
 var current_task_id: String = ""       # task the player went inward to handle
 var assigned_alter_id: String = ""     # alter chosen in the mind to handle it
+var current_scene: String = ""         # last gameplay scene, for resume-on-Continue
+var last_outcome_penalty: int = 0      # alignment lost to a strained assigned alter (per day)
+var current_situation: String = ""     # situation chosen from the task board
+var completed_tasks: Array[String] = [] # situation paths finished today
+
+# Live mutable system state. Centralised here (the documented single source of truth)
+# so it survives the External↔Internal scene swaps and can be serialized for saves.
+# The managers seed these on first load and write through on every change.
+var alter_stress: Dictionary = {}          # alter_id -> int
+var relationship_affinity: Dictionary = {} # "a|b" (sorted) -> int
 
 # Per-run deltas, captured for the day-end summary
 var stress_before: Dictionary = {}     # alter_id -> int (snapshot when first seen)
@@ -26,10 +36,39 @@ func reset_run() -> void:
 	flags.clear()
 	current_task_id = ""
 	assigned_alter_id = ""
+	current_scene = ""
+	last_outcome_penalty = 0
+	current_situation = ""
+	completed_tasks.clear()
+	alter_stress.clear()
+	relationship_affinity.clear()
 	stress_before.clear()
 	relationship_log.clear()
 	unlocked_memories.clear()
 	surfaced_facts.clear()
+
+
+## Move to the next day: bump the counter and clear per-day state, while keeping
+## cumulative progress (alignment, mystery, and live alter/relationship state).
+func advance_day() -> void:
+	day += 1
+	flags.clear()
+	current_task_id = ""
+	assigned_alter_id = ""
+	last_outcome_penalty = 0
+	current_situation = ""
+	completed_tasks.clear()
+	relationship_log.clear()
+	stress_before.clear()
+
+
+## Clears per-task handoff state between tasks in the same day, while keeping the
+## day's live alter/relationship state and its list of completed tasks.
+func reset_task() -> void:
+	assigned_alter_id = ""
+	current_task_id = ""
+	current_situation = ""
+	flags.erase("outcome_played")
 
 
 func set_flag(flag: String, value: bool = true) -> void:
@@ -52,6 +91,71 @@ func record_memory(memory_id: String) -> void:
 func record_fact(fact_id: String) -> void:
 	if fact_id != "" and not surfaced_facts.has(fact_id):
 		surfaced_facts.append(fact_id)
+
+
+## --- Serialization (used by SaveManager) ---
+
+func to_dict() -> Dictionary:
+	return {
+		"day": day,
+		"ending_alignment": ending_alignment,
+		"flags": flags,
+		"current_task_id": current_task_id,
+		"assigned_alter_id": assigned_alter_id,
+		"current_scene": current_scene,
+		"last_outcome_penalty": last_outcome_penalty,
+		"current_situation": current_situation,
+		"completed_tasks": completed_tasks,
+		"alter_stress": alter_stress,
+		"relationship_affinity": relationship_affinity,
+		"stress_before": stress_before,
+		"relationship_log": relationship_log,
+		"unlocked_memories": unlocked_memories,
+		"surfaced_facts": surfaced_facts,
+	}
+
+
+## Restores from a parsed save dict, rebuilding typed containers so the static
+## types hold (JSON gives untyped Array/Dictionary with float numbers).
+func from_dict(d: Dictionary) -> void:
+	day = int(d.get("day", 1))
+	ending_alignment = int(d.get("ending_alignment", 0))
+	current_task_id = str(d.get("current_task_id", ""))
+	assigned_alter_id = str(d.get("assigned_alter_id", ""))
+	current_scene = str(d.get("current_scene", ""))
+	last_outcome_penalty = int(d.get("last_outcome_penalty", 0))
+	current_situation = str(d.get("current_situation", ""))
+
+	completed_tasks.clear()
+	for p in d.get("completed_tasks", []):
+		completed_tasks.append(str(p))
+
+	flags.clear()
+	for k in d.get("flags", {}):
+		flags[k] = bool(d["flags"][k])
+
+	alter_stress = _to_int_dict(d.get("alter_stress", {}))
+	relationship_affinity = _to_int_dict(d.get("relationship_affinity", {}))
+	stress_before = _to_int_dict(d.get("stress_before", {}))
+
+	relationship_log.clear()
+	for e in d.get("relationship_log", []):
+		relationship_log.append(e as Dictionary)
+
+	unlocked_memories.clear()
+	for m in d.get("unlocked_memories", []):
+		unlocked_memories.append(str(m))
+
+	surfaced_facts.clear()
+	for f in d.get("surfaced_facts", []):
+		surfaced_facts.append(str(f))
+
+
+func _to_int_dict(src: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for k in src:
+		out[k] = int(src[k])
+	return out
 
 
 ## Assembled by the day-end screen. Pulls live values from the managers via the

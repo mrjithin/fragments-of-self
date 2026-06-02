@@ -1,0 +1,41 @@
+{
+	"start": "er_1",
+	"task_id": "neighbour_help",
+	"nodes": {
+		"er_1": {
+			"speaker": "Narration",
+			"text": "A knock at the door. The neighbour's move is in an hour and the boxes won't fit the car — could they spare a pair of hands?",
+			"next": "er_2"
+		},
+		"er_2": {
+			"speaker": "Narration",
+			"text": "It's fiddly, tetris-like work, and the clock is ticking. Who's best suited to this?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"er_out_rowan": {
+			"speaker": "Rowan",
+			"text": "He maps every box in his head and they slot together perfectly. Done early, with room to spare.",
+			"on_enter": {"surface_fact": "f_alters", "align": 2},
+			"next": "er_done"
+		},
+		"er_out_iris": {
+			"speaker": "Iris",
+			"text": "Careful and methodical. It takes a while, but nothing gets broken.",
+			"on_enter": {"surface_fact": "f_alters", "align": 1},
+			"next": "er_done"
+		},
+		"er_out_june": {
+			"speaker": "June",
+			"text": "More chatting than lifting — but the neighbour leaves smiling all the same.",
+			"on_enter": {"surface_fact": "f_alters", "align": 0},
+			"next": "er_done"
+		},
+		"er_done": {
+			"speaker": "Narration",
+			"text": "The van pulls away. A small thing, but it mattered to someone.",
+			"next": "END_TASK"
+		}
+	}
+}

@@ -6,7 +6,7 @@ extends Node2D
 const SITUATION_PATH: String = "res://data/external_situation.json"
 const TASKS_PATH: String = "res://data/tasks.json"
 const INTERNAL_SCENE: String = "res://scenes/internal/internal_mind.tscn"
-const DAY_END_SCENE: String = "res://scenes/ui/day_end_summary.tscn"
+const TASK_BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
 
 @onready var _box: DialogueBox = %DialogueBox
 
@@ -16,7 +16,9 @@ var _task: Task
 
 
 func _ready() -> void:
-	_situation = JsonLoader.load_dict(SITUATION_PATH)
+	# Play the situation the player chose on the task board (fallback to the default).
+	var sit_path: String = GameState.current_situation if GameState.current_situation != "" else SITUATION_PATH
+	_situation = JsonLoader.load_dict(sit_path)
 	_task = _load_task(_situation.get("task_id", ""))
 
 	_runner = DialogueRunner.new()
@@ -30,6 +32,10 @@ func _ready() -> void:
 	else:
 		EventBus.objective_changed.emit("Read what's happening, then look inward.")
 		_runner.start(_situation.get("start", ""))
+
+	# Autosave on entering this view so the run can be resumed from the title.
+	GameState.current_scene = scene_file_path
+	SaveManager.save()
 
 
 func _load_task(task_id: String) -> Task:
@@ -53,15 +59,27 @@ func _on_action(action: String) -> void:
 ## Resume the situation on the branch matching the alter chosen in the mind.
 func _play_outcome() -> void:
 	GameState.set_flag("outcome_played")
-	var outcome: Dictionary = _task.outcome_for(GameState.assigned_alter_id) if _task else {}
+	var assigned: String = GameState.assigned_alter_id
+	var outcome: Dictionary = _task.outcome_for(assigned) if _task else {}
 	var branch: String = outcome.get("branch", _situation.get("start", ""))
 	if _task:
 		GameClock.spend(_task.time_cost)
+	# Relationship-affects-outcome: sending an alter who still has a strained or
+	# broken bond costs alignment (you skipped mending it in the mind).
+	var rel_mgr := RelationshipManager.new()
+	rel_mgr.load_data()
+	var penalty: int = rel_mgr.penalty_for(assigned)
+	if penalty < 0:
+		GameState.last_outcome_penalty = penalty
+		GameState.add_alignment(penalty)
 	EventBus.objective_changed.emit("")
 	_runner.start(branch)
 
 
 func _on_finished(end_id: String) -> void:
-	if end_id == "END_DAY":
-		EventBus.day_ended.emit(GameState.build_day_summary())
-		SceneFlow.change_scene_to_file(DAY_END_SCENE)
+	if end_id == "END_TASK" or end_id == "END_DAY":
+		# Task complete — mark it done and hand control back to the day's task board.
+		if GameState.current_situation != "" and not GameState.completed_tasks.has(GameState.current_situation):
+			GameState.completed_tasks.append(GameState.current_situation)
+		GameState.reset_task()
+		SceneFlow.change_scene_to_file(TASK_BOARD_SCENE)

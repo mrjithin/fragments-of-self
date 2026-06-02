@@ -25,6 +25,7 @@ DIDFacts="*res://autoload/did_facts.gd"
 SaveManager="*res://autoload/save_manager.gd"
 Music="*res://autoload/music.gd"
 SceneFlow="*res://autoload/scene_flow.tscn"
+PauseMenu="*res://autoload/pause_menu.gd"
 
 [display]
 

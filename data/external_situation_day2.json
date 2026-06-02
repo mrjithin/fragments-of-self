@@ -1,0 +1,46 @@
+{
+	"start": "d2_intro_1",
+	"task_id": "friend_crisis",
+	"nodes": {
+		"d2_intro_1": {
+			"speaker": "Narration",
+			"text": "Evening settles in. The phone buzzes — a friend, voice thin and shaking. They need someone, and they need them now.",
+			"next": "d2_intro_2"
+		},
+		"d2_intro_2": {
+			"speaker": "Narration",
+			"text": "June has been holding everyone together lately, and the weight of it shows. Still, someone has to answer.",
+			"next": "d2_intro_3"
+		},
+		"d2_intro_3": {
+			"speaker": "Narration",
+			"text": "Who should pick up?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"d2_out_june": {
+			"speaker": "June",
+			"text": "\"I'm here. Take all the time you need.\" She listens the way she always does, and slowly the friend's breathing steadies.",
+			"on_enter": {"unlock_memory": "m_porch", "surface_fact": "f_origin", "align": 2},
+			"next": "d2_done"
+		},
+		"d2_out_iris": {
+			"speaker": "Iris",
+			"text": "Calm and steady, if a little formal. It helps — though warmth would have helped more.",
+			"on_enter": {"unlock_memory": "m_porch", "surface_fact": "f_origin", "align": 1},
+			"next": "d2_done"
+		},
+		"d2_out_rowan": {
+			"speaker": "Rowan",
+			"text": "He reaches for solutions before feelings — fix it, fast. The friend feels a little rushed, but not alone.",
+			"on_enter": {"unlock_memory": "m_porch", "surface_fact": "f_origin", "align": 0},
+			"next": "d2_done"
+		},
+		"d2_done": {
+			"speaker": "Narration",
+			"text": "The call ends softer than it began. Some days, showing up is the whole of it.",
+			"next": "END_TASK"
+		}
+	}
+}

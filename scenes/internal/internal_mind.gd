@@ -49,6 +49,10 @@ func _ready() -> void:
 	_update_cards()
 	_update_objective()
 
+	# Autosave on entering this view so the run can be resumed from the title.
+	GameState.current_scene = scene_file_path
+	SaveManager.save()
+
 
 # --- Graph construction ---
 
@@ -123,12 +127,13 @@ func _on_alter_selected(alter_id: String) -> void:
 # --- Card state ---
 
 func _update_cards() -> void:
-	var ready_to_assign: bool = GameState.has_flag("conflict_resolved") and GameState.has_flag("rested")
+	# Gate: you must calm any overwhelmed alter before sending anyone. Mending a
+	# strained bond is optional — but skipping it costs you at the outcome (penalty).
+	var ready_to_assign: bool = not _alter_mgr.any_stressed()
 	for id in _cards:
 		var alter: Alter = _alter_mgr.get_alter(id)
 		var strained: Relationship = _rel_mgr.first_strained_for(id)
-		var talk_visible: bool = strained != null and not GameState.has_flag("conflict_resolved")
-		_cards[id].set_actions(talk_visible, alter.is_stressed(), ready_to_assign)
+		_cards[id].set_actions(strained != null, alter.is_stressed(), ready_to_assign)
 		_cards[id].refresh_stats(alter)
 
 
@@ -190,7 +195,7 @@ func _on_rest(alter_id: String) -> void:
 # --- Assignment / handoff back ---
 
 func _on_assign(alter_id: String) -> void:
-	if not (GameState.has_flag("conflict_resolved") and GameState.has_flag("rested")):
+	if _alter_mgr.any_stressed():
 		return
 	GameState.assigned_alter_id = alter_id
 	EventBus.alter_assigned_to_task.emit(alter_id, GameState.current_task_id)
@@ -201,9 +206,10 @@ func _on_assign(alter_id: String) -> void:
 # --- Guidance ---
 
 func _update_objective() -> void:
-	if not GameState.has_flag("conflict_resolved"):
-		EventBus.objective_changed.emit("A bond is strained (amber edge). Press Talk on Iris or Rowan to help them meet.")
-	elif not GameState.has_flag("rested"):
-		EventBus.objective_changed.emit("Rowan is overwhelmed — their stress bar is high. Press Rest on Rowan.")
+	var stressed: Alter = _alter_mgr.first_stressed()
+	if stressed != null:
+		EventBus.objective_changed.emit("%s is overwhelmed — press Rest before anyone faces the day." % stressed.name)
+	elif _rel_mgr.has_any_strained():
+		EventBus.objective_changed.emit("A bond is strained (amber edge). Mend it with Talk for a better outcome — or Send anyway.")
 	else:
-		EventBus.objective_changed.emit("Now press Send on whoever should face the interview — pick the calm, composed one.")
+		EventBus.objective_changed.emit("Press Send on whoever should face the task — play to their strengths.")
