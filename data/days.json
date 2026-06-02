@@ -1,7 +1,17 @@
 {
-	"_comment": "The run's days, in order. Each day points to an external situation; optional 'setup' seeds that day's starting pressures (absolute alter stress / relationship affinity).",
+	"_comment": "The run's days, in order. Each day offers a list of task situations shown on the board; optional 'setup' seeds that day's starting pressures (absolute alter stress / relationship affinity).",
 	"days": [
-		{ "situation": "res://data/external_situation.json" },
-		{ "situation": "res://data/external_situation_day2.json", "setup": { "stress": { "june": 72 } } }
+		{
+			"tasks": [
+				"res://data/external_situation.json",
+				"res://data/errand_situation.json"
+			]
+		},
+		{
+			"tasks": [
+				"res://data/external_situation_day2.json"
+			],
+			"setup": { "stress": { "june": 72 } }
+		}
 	]
 }

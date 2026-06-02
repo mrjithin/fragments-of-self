@@ -84,8 +84,22 @@ func _ready() -> void:
 	_check("DID fact surfaced", summary.get("surfaced_facts", []).has("f_switching"))
 	_check("assigned alter recorded", summary.get("assigned_alter_id", "") == "iris")
 
+	# --- #2 task board: day offers multiple tasks; finishing one returns to the board ---
+	var day1_tasks: Array = JsonLoader.load_dict("res://data/days.json").get("days", [])[0].get("tasks", [])
+	_check("day 1 offers 2 tasks on the board", day1_tasks.size() == 2)
+	GameState.current_situation = "res://data/external_situation.json"
+	GameState.set_flag("outcome_played")
+	# emulate external_world._on_finished handing control back to the board
+	if not GameState.completed_tasks.has(GameState.current_situation):
+		GameState.completed_tasks.append(GameState.current_situation)
+	GameState.reset_task()
+	_check("finished task marked done", GameState.completed_tasks.has("res://data/external_situation.json"))
+	_check("reset_task cleared current_situation", GameState.current_situation == "")
+	_check("reset_task cleared assigned alter", GameState.assigned_alter_id == "")
+	_check("reset_task cleared outcome flag", not GameState.has_flag("outcome_played"))
+
 	# --- Save / load round-trip (persistence) ---
-	GameState.current_scene = "res://scenes/external/external_world.tscn"
+	GameState.current_scene = "res://scenes/external/task_board.tscn"
 	var saved_align: int = GameState.ending_alignment
 	var saved_iris_aff: int = rel_mgr.get_between("iris", "rowan").affinity
 	var saved_rowan_stress: int = alter_mgr.get_alter("rowan").stress
@@ -95,6 +109,7 @@ func _ready() -> void:
 	_check("load() succeeds", SaveManager.load())
 	_check("load restored alignment", GameState.ending_alignment == saved_align)
 	_check("load restored conflict mend", GameState.relationship_affinity.get("iris|rowan", 0) == saved_iris_aff)
+	_check("load restored completed tasks", GameState.completed_tasks.has("res://data/external_situation.json"))
 
 	# managers rehydrate from restored GameState, not the JSON defaults
 	var am2 := AlterManager.new()
@@ -110,6 +125,7 @@ func _ready() -> void:
 
 	GameState.advance_day()
 	_check("advanced to day 2", GameState.day == 2)
+	_check("new day clears completed tasks", GameState.completed_tasks.is_empty())
 	_check("alignment carries across days", GameState.ending_alignment == saved_align)
 	_check("memories carry across days", GameState.unlocked_memories.has("m_treehouse"))
 	_check("per-day flags cleared on new day", not GameState.has_flag("outcome_played"))

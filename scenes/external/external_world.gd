@@ -5,9 +5,8 @@ extends Node2D
 
 const SITUATION_PATH: String = "res://data/external_situation.json"
 const TASKS_PATH: String = "res://data/tasks.json"
-const DAYS_PATH: String = "res://data/days.json"
 const INTERNAL_SCENE: String = "res://scenes/internal/internal_mind.tscn"
-const DAY_END_SCENE: String = "res://scenes/ui/day_end_summary.tscn"
+const TASK_BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
 
 @onready var _box: DialogueBox = %DialogueBox
 
@@ -17,12 +16,9 @@ var _task: Task
 
 
 func _ready() -> void:
-	# Pick the day's situation; apply its one-time starting pressures (once per day).
-	var cfg := _day_config(GameState.day)
-	if not GameState.has_flag("day_setup_done"):
-		_apply_day_setup(cfg.get("setup", {}))
-		GameState.set_flag("day_setup_done")
-	_situation = JsonLoader.load_dict(str(cfg.get("situation", SITUATION_PATH)))
+	# Play the situation the player chose on the task board (fallback to the default).
+	var sit_path: String = GameState.current_situation if GameState.current_situation != "" else SITUATION_PATH
+	_situation = JsonLoader.load_dict(sit_path)
 	_task = _load_task(_situation.get("task_id", ""))
 
 	_runner = DialogueRunner.new()
@@ -40,23 +36,6 @@ func _ready() -> void:
 	# Autosave on entering this view so the run can be resumed from the title.
 	GameState.current_scene = scene_file_path
 	SaveManager.save()
-
-
-func _day_config(day: int) -> Dictionary:
-	var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
-	if days.is_empty():
-		return {"situation": SITUATION_PATH}
-	var idx: int = clampi(day - 1, 0, days.size() - 1)
-	return days[idx] as Dictionary
-
-
-func _apply_day_setup(setup: Dictionary) -> void:
-	var stress: Dictionary = setup.get("stress", {})
-	for aid in stress:
-		GameState.alter_stress[aid] = clampi(int(stress[aid]), 0, 100)
-	var strain: Dictionary = setup.get("strain", {})
-	for key in strain:
-		GameState.relationship_affinity[key] = clampi(int(strain[key]), 0, 100)
 
 
 func _load_task(task_id: String) -> Task:
@@ -98,6 +77,9 @@ func _play_outcome() -> void:
 
 
 func _on_finished(end_id: String) -> void:
-	if end_id == "END_DAY":
-		EventBus.day_ended.emit(GameState.build_day_summary())
-		SceneFlow.change_scene_to_file(DAY_END_SCENE)
+	if end_id == "END_TASK" or end_id == "END_DAY":
+		# Task complete — mark it done and hand control back to the day's task board.
+		if GameState.current_situation != "" and not GameState.completed_tasks.has(GameState.current_situation):
+			GameState.completed_tasks.append(GameState.current_situation)
+		GameState.reset_task()
+		SceneFlow.change_scene_to_file(TASK_BOARD_SCENE)

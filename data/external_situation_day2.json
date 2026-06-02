@@ -39,8 +39,8 @@
 		},
 		"d2_done": {
 			"speaker": "Narration",
-			"text": "The call ends softer than it began. Some days, showing up is the whole of it. The day winds down.",
-			"next": "END_DAY"
+			"text": "The call ends softer than it began. Some days, showing up is the whole of it.",
+			"next": "END_TASK"
 		}
 	}
 }

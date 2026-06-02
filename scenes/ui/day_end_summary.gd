@@ -4,7 +4,7 @@ extends Control
 
 const MEMORIES_PATH: String = "res://data/memories.json"
 const TITLE_SCENE: String = "res://scenes/ui/title_screen.tscn"
-const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
+const BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
 const DAYS_PATH: String = "res://data/days.json"
 
 @onready var _title: Label = %TitleLabel
@@ -81,7 +81,7 @@ func _on_continue() -> void:
 	if GameState.day < _total_days():
 		GameState.advance_day()
 		GameClock.reset_day()
-		SceneFlow.change_scene_to_file(EXTERNAL_SCENE)
+		SceneFlow.change_scene_to_file(BOARD_SCENE)
 	else:
 		GameState.reset_run()
 		GameClock.reset_day()

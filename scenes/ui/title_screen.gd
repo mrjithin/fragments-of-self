@@ -1,7 +1,7 @@
 extends Control
 ## Entry point. Starts a fresh run and hands off to the External World.
 
-const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
+const BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
 
 @onready var _new_game: Button = %NewGameButton
 @onready var _quit: Button = %QuitButton
@@ -28,7 +28,7 @@ func _add_continue_button() -> void:
 func _on_new_game() -> void:
 	GameState.reset_run()
 	GameClock.reset_day()
-	SceneFlow.change_scene_to_file(EXTERNAL_SCENE)
+	SceneFlow.change_scene_to_file(BOARD_SCENE)
 
 
 func _on_continue() -> void:
@@ -36,7 +36,7 @@ func _on_continue() -> void:
 		return
 	var target: String = GameState.current_scene
 	if target == "":
-		target = EXTERNAL_SCENE
+		target = BOARD_SCENE
 	SceneFlow.change_scene_to_file(target)
 
 

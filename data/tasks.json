@@ -23,6 +23,18 @@
 				"rowan": {"tier": "strain", "align": 0, "branch": "d2_out_rowan"}
 			},
 			"default_branch": "d2_out_iris"
+		},
+		"neighbour_help": {
+			"title": "A neighbour's moving day",
+			"prompt": "Someone needs a hand, and the clock is ticking. Who helps?",
+			"required_skill": "focus",
+			"time_cost": 30,
+			"outcomes": {
+				"rowan": {"tier": "best", "align": 2, "branch": "er_out_rowan"},
+				"iris": {"tier": "ok", "align": 1, "branch": "er_out_iris"},
+				"june": {"tier": "strain", "align": 0, "branch": "er_out_june"}
+			},
+			"default_branch": "er_out_iris"
 		}
 	}
 }
