@@ -1,0 +1,46 @@
+{
+	"start": "d3_intro_1",
+	"task_id": "hard_conversation",
+	"nodes": {
+		"d3_intro_1": {
+			"speaker": "Narration",
+			"text": "A voicemail, left sometime in the night. A name they haven't said aloud in years. \"It's been too long. Call me back?\"",
+			"next": "d3_intro_2"
+		},
+		"d3_intro_2": {
+			"speaker": "Narration",
+			"text": "The old pull is there — to smooth it over, to make everyone comfortable. But comfort was never quite the same as safe.",
+			"next": "d3_intro_3"
+		},
+		"d3_intro_3": {
+			"speaker": "Narration",
+			"text": "If they call back, someone will have to hold the line — kindly, but firmly. Who can do that?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"d3_out_iris": {
+			"speaker": "Iris",
+			"text": "\"It's good to hear from you. And — I need us to talk differently than we used to.\" Calm, unhurried. A boundary set without a single raised voice.",
+			"on_enter": {"unlock_memory": "m_kitchen", "surface_fact": "f_coconscious", "align": 2},
+			"next": "d3_done"
+		},
+		"d3_out_rowan": {
+			"speaker": "Rowan",
+			"text": "He has the lines ready and delivers them cleanly — maybe a little clipped. The boundary holds, even if it lands more like a wall than a door.",
+			"on_enter": {"unlock_memory": "m_kitchen", "surface_fact": "f_coconscious", "align": 1},
+			"next": "d3_done"
+		},
+		"d3_out_june": {
+			"speaker": "June",
+			"text": "She wants so badly to keep the peace that the line blurs, and the old patterns ease back in. Afterward, she is quiet for a long while.",
+			"on_enter": {"unlock_memory": "m_kitchen", "surface_fact": "f_coconscious", "align": 0},
+			"next": "d3_done"
+		},
+		"d3_done": {
+			"speaker": "Narration",
+			"text": "The call ends. Whatever was said, the line stayed where they put it. That's new. That's theirs.",
+			"next": "END_TASK"
+		}
+	}
+}

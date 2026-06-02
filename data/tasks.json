@@ -35,6 +35,18 @@
 				"june": {"tier": "strain", "align": 0, "branch": "er_out_june"}
 			},
 			"default_branch": "er_out_iris"
+		},
+		"hard_conversation": {
+			"title": "A hard conversation",
+			"prompt": "Someone from before wants to talk. Who can hold the line, kindly?",
+			"required_skill": "boundaries",
+			"time_cost": 35,
+			"outcomes": {
+				"iris": {"tier": "best", "align": 2, "branch": "d3_out_iris"},
+				"rowan": {"tier": "ok", "align": 1, "branch": "d3_out_rowan"},
+				"june": {"tier": "strain", "align": 0, "branch": "d3_out_june"}
+			},
+			"default_branch": "d3_out_rowan"
 		}
 	}
 }
