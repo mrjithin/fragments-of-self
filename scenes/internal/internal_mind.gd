@@ -7,6 +7,7 @@ extends Node2D
 const ALTER_NODE: PackedScene = preload("res://scenes/internal/alter_node.tscn")
 const ALTER_CARD: PackedScene = preload("res://scenes/internal/alter_card.tscn")
 const CONFLICT_PATH: String = "res://data/conflict_dialogue.json"
+const TASKS_PATH: String = "res://data/tasks.json"
 const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
 const TASK_BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
 
@@ -30,6 +31,7 @@ var _cards: Dictionary = {}           # id -> AlterCard
 var _edges: Dictionary = {}           # "a|b" (sorted) -> Line2D
 var _selected_id: String = ""
 var _conflict_runner: DialogueRunner
+var _task: Task                       # the task the player came in to handle (for card advice)
 
 
 func _ready() -> void:
@@ -37,6 +39,7 @@ func _ready() -> void:
 	_alter_mgr.load_data()
 	_rel_mgr = RelationshipManager.new()
 	_rel_mgr.load_data()
+	_task = _load_current_task()
 
 	_build_edges()
 	_build_alters()
@@ -95,6 +98,16 @@ func _build_cards() -> void:
 		_cards[id] = card
 
 
+## Load the task the player came in to handle, so cards can advise skill/trigger fit.
+func _load_current_task() -> Task:
+	if GameState.current_task_id == "":
+		return null
+	var tasks: Dictionary = JsonLoader.load_dict(TASKS_PATH).get("tasks", {})
+	if not tasks.has(GameState.current_task_id):
+		return null
+	return Task.from_dict(GameState.current_task_id, tasks[GameState.current_task_id])
+
+
 func _edge_key(a: String, b: String) -> String:
 	return "|".join([a, b]) if a < b else "|".join([b, a])
 
@@ -134,11 +147,14 @@ func _update_cards() -> void:
 	# No gate — anyone can be sent. Rest is offered when an alter is overwhelmed
 	# (it eases stress but costs time); Talk mends a strained bond (optional, but
 	# skipping it costs you at the outcome). The strategy is the tradeoff, not a lock.
+	var req_skill: String = _task.required_skill if _task else ""
+	var trigger: String = _task.trigger if _task else ""
 	for id in _cards:
 		var alter: Alter = _alter_mgr.get_alter(id)
 		var strained: Relationship = _rel_mgr.first_strained_for(id)
 		_cards[id].set_actions(strained != null, alter.is_stressed(), true)
 		_cards[id].refresh_stats(alter)
+		_cards[id].set_task_context(req_skill, trigger)
 
 
 # --- Conflict resolution ---
