@@ -117,13 +117,27 @@ func _play_outcome() -> void:
 		extra_align += penalty
 		notes.append("A strained bond made it harder.")
 
+	# Apply the stress and watch for a breaking point — the tangible bad outcome.
+	var before: int = alter.stress if alter else 0
+	var after: int = clampi(before + stress_add, 0, 100)
+	var broke: bool = after >= 100 and before < 100
+	if broke:
+		extra_align -= 1
+		notes.append("%s has hit their breaking point — they'll be fragile for days." % alter.name)
+
 	GameState.last_outcome_penalty = extra_align       # negative drag, for the day-end note
+	var authored: int = int(_situation.get("nodes", {}).get(branch, {}).get("on_enter", {}).get("align", 0))
+	var total_align: int = authored + extra_align
 	if extra_align != 0:
 		GameState.add_alignment(extra_align)
 	if alter:
 		alter_mgr.adjust_stress(assigned, stress_add)  # persists via GameState.alter_stress
 
-	EventBus.objective_changed.emit(" ".join(notes))
+	# Surface the concrete consequence so the choice is felt, not silent.
+	var headline: String = "%s — alignment %+d" % [alter.name if alter else "They", total_align]
+	if alter:
+		headline += "  ·  stress %d→%d%s" % [before, after, "  ⚠ BREAKING POINT" if broke else ""]
+	EventBus.objective_changed.emit("%s   %s" % [headline, " ".join(notes)])
 	_runner.start(branch)
 
 

@@ -68,6 +68,13 @@ func _compose_body(summary: Dictionary) -> String:
 	if _skipped > 0:
 		lines.append("[b]Left unattended:[/b] %d task(s) — life doesn't pause (alignment -%d)." % [_skipped, _skipped])
 
+	var heavy: Array[String] = []
+	for aid in GameState.alter_stress:
+		if int(GameState.alter_stress[aid]) >= 65:
+			heavy.append("%s (%d)" % [str(aid).capitalize(), int(GameState.alter_stress[aid])])
+	if not heavy.is_empty():
+		lines.append("[b]Carrying heavy stress into tomorrow:[/b] %s — rest them early or it compounds." % ", ".join(heavy))
+
 	lines.append("")
 	lines.append("[i]Tomorrow brings new faces, and new pieces of the past…[/i]")
 	return "\n".join(lines)
