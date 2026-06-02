@@ -12,7 +12,17 @@ See [GAME_DESIGN.md](GAME_DESIGN.md) for the full design document and [ARCHITECT
 
 ## Current state
 
-Early scaffolding. The repo contains only the Godot project shell (`project.godot`, `icon.svg`). No gameplay scenes or scripts exist yet. Engine: Godot 4.6, GL Compatibility renderer, Jolt physics (3D physics engine set by default; the game itself is 2D).
+Playable vertical slice, now a **4-day arc**. Engine: Godot 4.6, GL Compatibility renderer, Jolt physics (3D engine on by default; game itself is 2D). What exists:
+
+- **Loop:** Title → task board (day hub) → external world (JSON dialogue) → internal mind (alter graph: select/Talk/Rest/Send, conflict dialogue, stress gate) → memory-assembly mini-game → day-end summary (alignment meter, Survival/Cooperation/Integration paths) → next day. Multi-day, relationship-driven outcomes.
+- **Autoloads:** `GameState` (single source of truth + serialization), `EventBus` (all cross-view comms), `GameClock`, `RNG` (seeded, `weighted_pick`), `SaveManager` (versioned JSON save incl. clock + RNG seed), `DIDFacts`, `Music` (scene-reactive ambient crossfade), `SceneFlow` (fade transitions), `PauseMenu` (Esc overlay, working Sound toggle).
+- **Systems:** alter manager, relationship manager, dialogue runner, JSON loader, `EventPool` (randomness first cut — weighted, non-repeating "event of the day" surfacing a DID fact).
+- **Stakes model (the strategy core):** choosing an alter has real consequences. Each task has a `required_skill` and a `trigger`; sending an alter that lacks the skill, is hit by the task's trigger, is already overwhelmed, or carries a strained bond costs alignment and spikes stress. Stress is a resource — work tires alters and **persists/compounds across days**; Rest only partly relieves it (−35) and costs time (20). There is no rest-wall: you *may* send anyone, but pay for a poor choice. The day's time budget binds (can't do every task + rest + mend), and tasks left unattended cost alignment at day-end. Care (match strengths, avoid triggers, mend bonds, rest wisely) → Integration path; neglect → Survival. Faithful to GAME_DESIGN.md and Celeste's "understand the parts of yourself, don't suppress them" ethos.
+- **Content (data-driven, no code per item):** `data/*.json` — days, tasks, situations (day1–4), alters, relationships, conflict dialogue, memories, DID facts, random events.
+- **Audio:** per-view ambient pads, generated procedurally (`tools/gen_audio.gd`), crossfade on `EventBus.scene_changed`.
+- **Dev tools (`tools/`):** headless sims (`sim_playthrough`, `sim_continue`, `sim_day3`, `sim_day4`, `sim_events`, `sim_audio`), `validate_scenes.gd`, asset generators (`gen_pixel_art`, `gen_audio`). Run e.g. `godot --headless --path . res://tools/sim_playthrough.tscn`. After adding a new `class_name`, run `godot --headless --editor --quit` once to refresh the global class cache.
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) "Status" section for what's built beyond the original build order.
 
 ## Tech & conventions
 

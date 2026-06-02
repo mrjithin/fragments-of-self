@@ -14,7 +14,14 @@ const DAYS_PATH: String = "res://data/days.json"
 @onready var _continue: Button = %EndDemoButton
 
 
+var _skipped: int = 0
+
+
 func _ready() -> void:
+	# Time is finite: any of the day's tasks you left unattended costs alignment.
+	_skipped = _count_skipped()
+	if _skipped > 0:
+		GameState.add_alignment(-_skipped)
 	var summary: Dictionary = GameState.build_day_summary()
 	var is_final: bool = GameState.day >= _total_days()
 	_title.text = "Day %d  —  the chapter closes" % summary.get("day", 1) if is_final \
@@ -56,7 +63,17 @@ func _compose_body(summary: Dictionary) -> String:
 			lines.append("[b]Memory recovered:[/b] %s" % title)
 
 	if GameState.last_outcome_penalty < 0:
-		lines.append("[b]A strained bond made today harder[/b] (alignment %d)." % GameState.last_outcome_penalty)
+		lines.append("[b]The choice cost something[/b] — strain, triggers, or an unmended bond (alignment %d)." % GameState.last_outcome_penalty)
+
+	if _skipped > 0:
+		lines.append("[b]Left unattended:[/b] %d task(s) — life doesn't pause (alignment -%d)." % [_skipped, _skipped])
+
+	var heavy: Array[String] = []
+	for aid in GameState.alter_stress:
+		if int(GameState.alter_stress[aid]) >= 65:
+			heavy.append("%s (%d)" % [str(aid).capitalize(), int(GameState.alter_stress[aid])])
+	if not heavy.is_empty():
+		lines.append("[b]Carrying heavy stress into tomorrow:[/b] %s — rest them early or it compounds." % ", ".join(heavy))
 
 	lines.append("")
 	lines.append("[i]Tomorrow brings new faces, and new pieces of the past…[/i]")
@@ -66,6 +83,16 @@ func _compose_body(summary: Dictionary) -> String:
 func _total_days() -> int:
 	var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
 	return maxi(1, days.size())
+
+
+## How many of today's offered tasks the player never handled.
+func _count_skipped() -> int:
+	var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
+	if days.is_empty():
+		return 0
+	var idx: int = clampi(GameState.day - 1, 0, days.size() - 1)
+	var tasks: Array = (days[idx] as Dictionary).get("tasks", [])
+	return maxi(0, tasks.size() - GameState.completed_tasks.size())
 
 
 func _alignment_path(align: int, align_max: int) -> String:

@@ -12,6 +12,18 @@
 				"res://data/external_situation_day2.json"
 			],
 			"setup": { "stress": { "june": 72 } }
+		},
+		{
+			"tasks": [
+				"res://data/external_situation_day3.json"
+			],
+			"setup": { "stress": { "iris": 70 } }
+		},
+		{
+			"tasks": [
+				"res://data/external_situation_day4.json"
+			],
+			"setup": { "strain": { "iris|rowan": 25 } }
 		}
 	]
 }

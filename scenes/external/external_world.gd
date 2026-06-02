@@ -34,7 +34,11 @@ func _ready() -> void:
 		_runner.start(_situation.get("start", ""))
 
 	# Autosave on entering this view so the run can be resumed from the title.
-	GameState.current_scene = scene_file_path
+	# Anchor the resume point to the day's task board (the durable hub) rather than
+	# this transient mid-task view — resuming there keeps completed tasks, alter
+	# stress, bonds, alignment and time intact without replaying a half-finished
+	# situation or rebuilding a mid-flight mind→world handoff.
+	GameState.current_scene = TASK_BOARD_SCENE
 	SaveManager.save()
 
 
@@ -56,7 +60,11 @@ func _on_action(action: String) -> void:
 		SceneFlow.change_scene_to_file(INTERNAL_SCENE)
 
 
-## Resume the situation on the branch matching the alter chosen in the mind.
+## Resume on the chosen alter's branch and resolve the real consequences of that
+## choice: the work tires them (stress, which persists across days), facing a task
+## that hits their trigger shakes them hard, an unmended bond costs alignment, and
+## sending someone already overwhelmed costs more. Caring for the right part of the
+## self — matching strengths, avoiding triggers, mending bonds — is how you do well.
 func _play_outcome() -> void:
 	GameState.set_flag("outcome_played")
 	var assigned: String = GameState.assigned_alter_id
@@ -64,15 +72,72 @@ func _play_outcome() -> void:
 	var branch: String = outcome.get("branch", _situation.get("start", ""))
 	if _task:
 		GameClock.spend(_task.time_cost)
-	# Relationship-affects-outcome: sending an alter who still has a strained or
-	# broken bond costs alignment (you skipped mending it in the mind).
+
+	var alter_mgr := AlterManager.new()
+	alter_mgr.load_data()
+	var alter: Alter = alter_mgr.get_alter(assigned)
 	var rel_mgr := RelationshipManager.new()
 	rel_mgr.load_data()
+
+	var notes: PackedStringArray = []
+	var extra_align: int = 0
+	var stress_add: int = 15                          # any task is tiring
+
+	# A mid-situation choice shifts how the work lands: easing first costs nothing but
+	# gentleness; pushing buys a little more alignment now at the price of stress that
+	# compounds into later days. A genuine, non-obvious tradeoff.
+	if GameState.has_flag("prep_eased"):
+		stress_add -= 5
+		notes.append("Steadied beforehand, it landed a little softer.")
+	elif GameState.has_flag("prep_pushed"):
+		stress_add += 5
+		extra_align += 1
+		notes.append("They pushed hard — sharper today, but it'll cost them later.")
+	GameState.flags.erase("prep_eased")
+	GameState.flags.erase("prep_pushed")
+
+	if _task and alter and _task.required_skill != "" and alter.has_skill(_task.required_skill):
+		notes.append("%s played to their strength." % alter.name)
+	else:
+		notes.append("%s was out of their depth." % (alter.name if alter else "They"))
+
+	var triggered: bool = _task and alter and _task.trigger != "" and alter.triggers.has(_task.trigger)
+	if triggered:
+		extra_align -= 2
+		stress_add += 35
+		notes.append("It hit their trigger (%s) — they're badly shaken." % _task.trigger)
+
+	if alter and alter.is_stressed():
+		extra_align -= 1
+		stress_add += 10
+		notes.append("Sent already overwhelmed — it took a toll.")
+
 	var penalty: int = rel_mgr.penalty_for(assigned)
 	if penalty < 0:
-		GameState.last_outcome_penalty = penalty
-		GameState.add_alignment(penalty)
-	EventBus.objective_changed.emit("")
+		extra_align += penalty
+		notes.append("A strained bond made it harder.")
+
+	# Apply the stress and watch for a breaking point — the tangible bad outcome.
+	var before: int = alter.stress if alter else 0
+	var after: int = clampi(before + stress_add, 0, 100)
+	var broke: bool = after >= 100 and before < 100
+	if broke:
+		extra_align -= 1
+		notes.append("%s has hit their breaking point — they'll be fragile for days." % alter.name)
+
+	GameState.last_outcome_penalty = extra_align       # negative drag, for the day-end note
+	var authored: int = int(_situation.get("nodes", {}).get(branch, {}).get("on_enter", {}).get("align", 0))
+	var total_align: int = authored + extra_align
+	if extra_align != 0:
+		GameState.add_alignment(extra_align)
+	if alter:
+		alter_mgr.adjust_stress(assigned, stress_add)  # persists via GameState.alter_stress
+
+	# Surface the concrete consequence so the choice is felt, not silent.
+	var headline: String = "%s — alignment %+d" % [alter.name if alter else "They", total_align]
+	if alter:
+		headline += "  ·  stress %d→%d%s" % [before, after, "  ⚠ BREAKING POINT" if broke else ""]
+	EventBus.objective_changed.emit("%s   %s" % [headline, " ".join(notes)])
 	_runner.start(branch)
 
 

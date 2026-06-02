@@ -4,11 +4,24 @@
 			"title": "The job interview",
 			"prompt": "An interview, this afternoon. Who should step forward?",
 			"required_skill": "composure",
+			"trigger": "deadlines",
 			"time_cost": 40,
 			"outcomes": {
-				"iris": {"tier": "best", "align": 2, "branch": "ext_outcome_iris"},
-				"june": {"tier": "ok", "align": 1, "branch": "ext_outcome_june"},
-				"rowan": {"tier": "strain", "align": 0, "branch": "ext_outcome_rowan"}
+				"iris": {
+					"tier": "best",
+					"align": 2,
+					"branch": "ext_outcome_iris"
+				},
+				"june": {
+					"tier": "ok",
+					"align": 1,
+					"branch": "ext_outcome_june"
+				},
+				"rowan": {
+					"tier": "strain",
+					"align": 0,
+					"branch": "ext_outcome_rowan"
+				}
 			},
 			"default_branch": "ext_outcome_june"
 		},
@@ -16,11 +29,24 @@
 			"title": "A friend in crisis",
 			"prompt": "A friend needs support tonight. Who answers?",
 			"required_skill": "empathy",
+			"trigger": "deadlines",
 			"time_cost": 35,
 			"outcomes": {
-				"june": {"tier": "best", "align": 2, "branch": "d2_out_june"},
-				"iris": {"tier": "ok", "align": 1, "branch": "d2_out_iris"},
-				"rowan": {"tier": "strain", "align": 0, "branch": "d2_out_rowan"}
+				"june": {
+					"tier": "best",
+					"align": 2,
+					"branch": "d2_out_june"
+				},
+				"iris": {
+					"tier": "ok",
+					"align": 1,
+					"branch": "d2_out_iris"
+				},
+				"rowan": {
+					"tier": "strain",
+					"align": 0,
+					"branch": "d2_out_rowan"
+				}
 			},
 			"default_branch": "d2_out_iris"
 		},
@@ -28,13 +54,76 @@
 			"title": "A neighbour's moving day",
 			"prompt": "Someone needs a hand, and the clock is ticking. Who helps?",
 			"required_skill": "focus",
+			"trigger": "conflict",
 			"time_cost": 30,
 			"outcomes": {
-				"rowan": {"tier": "best", "align": 2, "branch": "er_out_rowan"},
-				"iris": {"tier": "ok", "align": 1, "branch": "er_out_iris"},
-				"june": {"tier": "strain", "align": 0, "branch": "er_out_june"}
+				"rowan": {
+					"tier": "best",
+					"align": 2,
+					"branch": "er_out_rowan"
+				},
+				"iris": {
+					"tier": "ok",
+					"align": 1,
+					"branch": "er_out_iris"
+				},
+				"june": {
+					"tier": "strain",
+					"align": 0,
+					"branch": "er_out_june"
+				}
 			},
 			"default_branch": "er_out_iris"
+		},
+		"hard_conversation": {
+			"title": "A hard conversation",
+			"prompt": "Someone from before wants to talk. Who can hold the line, kindly?",
+			"required_skill": "boundaries",
+			"trigger": "conflict",
+			"time_cost": 35,
+			"outcomes": {
+				"iris": {
+					"tier": "best",
+					"align": 2,
+					"branch": "d3_out_iris"
+				},
+				"rowan": {
+					"tier": "ok",
+					"align": 1,
+					"branch": "d3_out_rowan"
+				},
+				"june": {
+					"tier": "strain",
+					"align": 0,
+					"branch": "d3_out_june"
+				}
+			},
+			"default_branch": "d3_out_rowan"
+		},
+		"the_appointment": {
+			"title": "The appointment",
+			"prompt": "A first session with someone new. Who speaks for the system?",
+			"required_skill": "listening",
+			"trigger": "deadlines",
+			"time_cost": 40,
+			"outcomes": {
+				"june": {
+					"tier": "best",
+					"align": 2,
+					"branch": "d4_out_june"
+				},
+				"iris": {
+					"tier": "ok",
+					"align": 1,
+					"branch": "d4_out_iris"
+				},
+				"rowan": {
+					"tier": "strain",
+					"align": 0,
+					"branch": "d4_out_rowan"
+				}
+			},
+			"default_branch": "d4_out_iris"
 		}
 	}
 }

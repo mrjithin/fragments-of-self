@@ -9,7 +9,25 @@
 		},
 		"ext_intro_2": {
 			"speaker": "Narration",
-			"text": "An interview. This afternoon. The first real chance in months.",
+			"text": "An interview. This afternoon. The first real chance in months. The clock on the wall is already loud.",
+			"next": "ext_prep"
+		},
+		"ext_prep": {
+			"speaker": "Narration",
+			"text": "There's a sliver of time before they have to leave. The body is humming — too much coffee, too little sleep. What matters most right now?",
+			"choices": [
+				{"text": "Steady first — breathe, feet on the floor, slow it down.", "next": "ext_prep_eased", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "Use every minute — drill the answers, one more time, faster.", "next": "ext_prep_pushed", "consequence": {"set_flag": "prep_pushed"}}
+			]
+		},
+		"ext_prep_eased": {
+			"speaker": "Narration",
+			"text": "Three slow breaths. The kitchen stops spinning. Whoever steps forward will start from steadier ground — even if the answers aren't word-perfect.",
+			"next": "ext_intro_3"
+		},
+		"ext_prep_pushed": {
+			"speaker": "Narration",
+			"text": "Question after question, rehearsed until the words gleam. Sharper, yes — but the chest is tighter now, and that tightness doesn't leave when the interview does.",
 			"next": "ext_intro_3"
 		},
 		"ext_intro_3": {
@@ -23,23 +41,36 @@
 			"speaker": "Iris",
 			"text": "A steady breath. \"Thank you for seeing me today.\" The words come out calm and sure. The room settles, and so does the interviewer.",
 			"on_enter": {"unlock_memory": "m_treehouse", "surface_fact": "f_switching", "align": 2},
-			"next": "ext_done"
+			"next": "ext_reflect"
 		},
 		"ext_outcome_june": {
 			"speaker": "June",
 			"text": "Warm, a little nervous, but genuinely kind. The conversation finds its footing, and it goes okay.",
 			"on_enter": {"unlock_memory": "m_treehouse", "surface_fact": "f_switching", "align": 1},
-			"next": "ext_done"
+			"next": "ext_reflect"
 		},
 		"ext_outcome_rowan": {
 			"speaker": "Rowan",
 			"text": "Sharp, overprepared, every answer rehearsed twice. The pressure shows in clipped words. It's bumpy, but they get through it.",
 			"on_enter": {"unlock_memory": "m_treehouse", "surface_fact": "f_switching", "align": 0},
-			"next": "ext_done"
+			"next": "ext_reflect"
 		},
-		"ext_done": {
+		"ext_reflect": {
 			"speaker": "Narration",
-			"text": "They step back out into the autumn light. Whatever comes of it, today they showed up.",
+			"text": "It's over. Out on the pavement the autumn light is thin and gold. The phone sits heavy in a pocket — there are people who'd want to know how it went.",
+			"choices": [
+				{"text": "Call them. Let someone in on the day.", "next": "ext_done_share", "consequence": {"set_flag": "reached_out", "align": 1}},
+				{"text": "Keep it close a while — protect the soft, unfinished thing.", "next": "ext_done_close", "consequence": {"set_flag": "kept_close"}}
+			]
+		},
+		"ext_done_share": {
+			"speaker": "Narration",
+			"text": "A voice on the line, warm and proud before the story's even finished. Whatever the result, the day feels less like it happened to them alone.",
+			"next": "END_TASK"
+		},
+		"ext_done_close": {
+			"speaker": "Narration",
+			"text": "The phone goes back in the pocket, unanswered for now. Some things need to be held quietly first — and choosing that is its own kind of strength.",
 			"next": "END_TASK"
 		}
 	}

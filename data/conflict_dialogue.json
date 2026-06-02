@@ -35,8 +35,8 @@
 		},
 		"cf_bad": {
 			"speaker": "Narration",
-			"text": "Rowan goes quiet — not resolved, just pushed down. The tension is still there. (Try again.)",
-			"next": "cf_choice"
+			"text": "Rowan goes quiet — not resolved, just pushed down. The bond frays further, and that tension will follow whoever you send today.",
+			"next": "END_CONFLICT"
 		}
 	}
 }

@@ -9,12 +9,20 @@
 		},
 		"d2_intro_2": {
 			"speaker": "Narration",
-			"text": "June has been holding everyone together lately, and the weight of it shows. Still, someone has to answer.",
-			"next": "d2_intro_3"
+			"text": "June has been holding everyone together lately, and the weight of it shows. Still, the phone keeps buzzing, and someone has to answer.",
+			"next": "d2_prep"
+		},
+		"d2_prep": {
+			"speaker": "Narration",
+			"text": "Before picking up — how much of themselves to bring to this?",
+			"choices": [
+				{"text": "Set a gentle limit first: present, but not endless.", "next": "d2_intro_3", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "Hold nothing back — be whatever the friend needs, all night.", "next": "d2_intro_3", "consequence": {"set_flag": "prep_pushed"}}
+			]
 		},
 		"d2_intro_3": {
 			"speaker": "Narration",
-			"text": "Who should pick up?",
+			"text": "The phone is still ringing. Who should pick up?",
 			"choices": [
 				{"text": "Look inward…", "action": "enter_mind"}
 			]

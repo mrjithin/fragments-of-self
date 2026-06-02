@@ -16,6 +16,7 @@ var current_scene: String = ""         # last gameplay scene, for resume-on-Cont
 var last_outcome_penalty: int = 0      # alignment lost to a strained assigned alter (per day)
 var current_situation: String = ""     # situation chosen from the task board
 var completed_tasks: Array[String] = [] # situation paths finished today
+var current_event_text: String = ""    # the day's rolled random event line (shown on board)
 
 # Live mutable system state. Centralised here (the documented single source of truth)
 # so it survives the External↔Internal scene swaps and can be serialized for saves.
@@ -28,6 +29,7 @@ var stress_before: Dictionary = {}     # alter_id -> int (snapshot when first se
 var relationship_log: Array[Dictionary] = []   # [{pair, from_status, to_status}]
 var unlocked_memories: Array[String] = []
 var surfaced_facts: Array[String] = []
+var seen_events: Array[String] = []    # random events already rolled (no-repeat, persists)
 
 
 func reset_run() -> void:
@@ -39,6 +41,7 @@ func reset_run() -> void:
 	current_scene = ""
 	last_outcome_penalty = 0
 	current_situation = ""
+	current_event_text = ""
 	completed_tasks.clear()
 	alter_stress.clear()
 	relationship_affinity.clear()
@@ -46,6 +49,7 @@ func reset_run() -> void:
 	relationship_log.clear()
 	unlocked_memories.clear()
 	surfaced_facts.clear()
+	seen_events.clear()
 
 
 ## Move to the next day: bump the counter and clear per-day state, while keeping
@@ -57,6 +61,7 @@ func advance_day() -> void:
 	assigned_alter_id = ""
 	last_outcome_penalty = 0
 	current_situation = ""
+	current_event_text = ""
 	completed_tasks.clear()
 	relationship_log.clear()
 	stress_before.clear()
@@ -105,6 +110,7 @@ func to_dict() -> Dictionary:
 		"current_scene": current_scene,
 		"last_outcome_penalty": last_outcome_penalty,
 		"current_situation": current_situation,
+		"current_event_text": current_event_text,
 		"completed_tasks": completed_tasks,
 		"alter_stress": alter_stress,
 		"relationship_affinity": relationship_affinity,
@@ -112,6 +118,7 @@ func to_dict() -> Dictionary:
 		"relationship_log": relationship_log,
 		"unlocked_memories": unlocked_memories,
 		"surfaced_facts": surfaced_facts,
+		"seen_events": seen_events,
 	}
 
 
@@ -125,6 +132,7 @@ func from_dict(d: Dictionary) -> void:
 	current_scene = str(d.get("current_scene", ""))
 	last_outcome_penalty = int(d.get("last_outcome_penalty", 0))
 	current_situation = str(d.get("current_situation", ""))
+	current_event_text = str(d.get("current_event_text", ""))
 
 	completed_tasks.clear()
 	for p in d.get("completed_tasks", []):
@@ -149,6 +157,10 @@ func from_dict(d: Dictionary) -> void:
 	surfaced_facts.clear()
 	for f in d.get("surfaced_facts", []):
 		surfaced_facts.append(str(f))
+
+	seen_events.clear()
+	for ev in d.get("seen_events", []):
+		seen_events.append(str(ev))
 
 
 func _to_int_dict(src: Dictionary) -> Dictionary:

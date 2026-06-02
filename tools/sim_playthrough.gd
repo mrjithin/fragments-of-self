@@ -42,8 +42,8 @@ func _ready() -> void:
 	_check("strained bond → penalty -1 for rowan", rel_mgr.penalty_for("rowan") == -1)
 	_check("healthy june → no penalty", rel_mgr.penalty_for("june") == 0)
 
-	# --- Internal: gate is 'no overwhelmed alter'; mending is optional ---
-	_check("assignment blocked while rowan is overwhelmed", alter_mgr.any_stressed())
+	# --- Internal: rowan starts overwhelmed (Rest is offered; not a hard wall) ---
+	_check("rowan starts overwhelmed", alter_mgr.any_stressed())
 
 	# Resolve the iris-rowan conflict (good choice: +30 affinity, +1 alignment).
 	rel_mgr.adjust("iris", "rowan", 30)
@@ -54,11 +54,11 @@ func _ready() -> void:
 	_check("relationship_log recorded mend", GameState.relationship_log.size() == 1)
 	_check("mended bond → penalty cleared for iris", rel_mgr.penalty_for("iris") == 0)
 
-	# Rest the overwhelmed alter (rowan) — this unlocks assignment.
-	alter_mgr.adjust_stress("rowan", -50)
-	GameClock.spend(15)
-	_check("rowan no longer stressed after rest", not alter_mgr.get_alter("rowan").is_stressed())
-	_check("assignment unblocked once nobody is overwhelmed", not alter_mgr.any_stressed())
+	# Rest the overwhelmed alter (rowan) — partial relief (-35), costs 20 time.
+	alter_mgr.adjust_stress("rowan", -35)
+	GameClock.spend(20)
+	_check("rowan no longer overwhelmed after rest", not alter_mgr.get_alter("rowan").is_stressed())
+	_check("nobody overwhelmed after resting rowan", not alter_mgr.any_stressed())
 
 	# Assign the calm, composure-skilled alter (iris).
 	GameState.assigned_alter_id = "iris"
@@ -78,7 +78,7 @@ func _ready() -> void:
 
 	# --- Day end ---
 	var summary := GameState.build_day_summary()
-	_check("time spent == 20+15+40 == 75", summary.get("time_spent", 0) == 75)
+	_check("time spent == 20+20+40 == 80", summary.get("time_spent", 0) == 80)
 	_check("alignment == 3 (conflict +1, outcome +2, no penalty)", summary.get("alignment", 0) == 3)
 	_check("memory recovered", summary.get("unlocked_memories", []).has("m_treehouse"))
 	_check("DID fact surfaced", summary.get("surfaced_facts", []).has("f_switching"))
@@ -121,7 +121,7 @@ func _ready() -> void:
 
 	# --- #1 multi-day loop ---
 	var days: Array = JsonLoader.load_dict("res://data/days.json").get("days", [])
-	_check("run has 2 days configured", days.size() == 2)
+	_check("run has 4 days configured", days.size() == 4)
 
 	GameState.advance_day()
 	_check("advanced to day 2", GameState.day == 2)

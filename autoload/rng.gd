@@ -24,3 +24,20 @@ func randi_range_inclusive(from: int, to: int) -> int:
 
 func randf_unit() -> float:
 	return _rng.randf()
+
+
+## Pick an index in [0, weights.size()) with probability proportional to its weight.
+## Returns -1 for an empty list or non-positive total. Deterministic under the seed.
+func weighted_pick(weights: Array) -> int:
+	var total: float = 0.0
+	for w in weights:
+		total += maxf(0.0, float(w))
+	if total <= 0.0:
+		return -1
+	var roll: float = _rng.randf() * total
+	var acc: float = 0.0
+	for i in weights.size():
+		acc += maxf(0.0, float(weights[i]))
+		if roll < acc:
+			return i
+	return weights.size() - 1
