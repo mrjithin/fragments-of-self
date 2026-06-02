@@ -83,5 +83,37 @@ func _ready() -> void:
 	_check("DID fact surfaced", summary.get("surfaced_facts", []).has("f_switching"))
 	_check("assigned alter recorded", summary.get("assigned_alter_id", "") == "iris")
 
+	# --- Save / load round-trip (persistence) ---
+	GameState.current_scene = "res://scenes/external/external_world.tscn"
+	var saved_align: int = GameState.ending_alignment
+	var saved_mems: int = GameState.unlocked_memories.size()
+	var saved_iris_aff: int = rel_mgr.get_between("iris", "rowan").affinity
+	var saved_rowan_stress: int = alter_mgr.get_alter("rowan").stress
+	_check("save() writes a file", SaveManager.save())
+	_check("has_save() true after save", SaveManager.has_save())
+
+	GameState.reset_run()
+	_check("reset cleared alignment", GameState.ending_alignment == 0)
+	_check("reset cleared live state", GameState.alter_stress.is_empty() and GameState.relationship_affinity.is_empty())
+
+	_check("load() succeeds", SaveManager.load())
+	_check("load restored alignment", GameState.ending_alignment == saved_align)
+	_check("load restored memories", GameState.unlocked_memories.size() == saved_mems)
+	_check("load restored conflict flag", GameState.has_flag("conflict_resolved"))
+	_check("load restored resume scene", GameState.current_scene == "res://scenes/external/external_world.tscn")
+
+	# Managers rehydrate from the restored GameState rather than the JSON defaults.
+	var alter_mgr2 := AlterManager.new()
+	alter_mgr2.load_data()
+	var rel_mgr2 := RelationshipManager.new()
+	rel_mgr2.load_data()
+	_check("reloaded rowan stress matches save (rested persisted)",
+		alter_mgr2.get_alter("rowan").stress == saved_rowan_stress)
+	_check("reloaded iris-rowan affinity matches save (mend persisted)",
+		rel_mgr2.get_between("iris", "rowan").affinity == saved_iris_aff)
+
+	SaveManager.delete_save()
+	_check("delete_save() removes the file", not SaveManager.has_save())
+
 	print("=== sim complete, failures: ", _failures, " ===")
 	get_tree().quit(_failures)

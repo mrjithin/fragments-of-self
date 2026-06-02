@@ -31,6 +31,10 @@ func _ready() -> void:
 		EventBus.objective_changed.emit("Read what's happening, then look inward.")
 		_runner.start(_situation.get("start", ""))
 
+	# Autosave on entering this view so the run can be resumed from the title.
+	GameState.current_scene = scene_file_path
+	SaveManager.save()
+
 
 func _load_task(task_id: String) -> Task:
 	if task_id == "":

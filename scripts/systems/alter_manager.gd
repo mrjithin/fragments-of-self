@@ -15,6 +15,12 @@ func load_data() -> void:
 	var data := JsonLoader.load_dict(ALTERS_PATH)
 	for entry in data.get("alters", []):
 		var a := Alter.from_dict(entry as Dictionary)
+		# Restore any live stress carried in GameState (across scene swaps / saves);
+		# otherwise seed it from the authored JSON value.
+		if GameState.alter_stress.has(a.id):
+			a.stress = int(GameState.alter_stress[a.id])
+		else:
+			GameState.alter_stress[a.id] = a.stress
 		alters[a.id] = a
 		order.append(a.id)
 		# Snapshot starting stress for the day-end summary.
@@ -31,4 +37,5 @@ func adjust_stress(alter_id: String, delta: int) -> void:
 	if a == null:
 		return
 	a.stress = clampi(a.stress + delta, 0, 100)
+	GameState.alter_stress[alter_id] = a.stress
 	EventBus.alter_stress_changed.emit(alter_id, a.stress)

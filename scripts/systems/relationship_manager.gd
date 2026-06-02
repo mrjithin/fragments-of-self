@@ -14,7 +14,20 @@ func load_data() -> void:
 	var data := JsonLoader.load_dict(RELATIONSHIPS_PATH)
 	thresholds = data.get("status_thresholds", thresholds)
 	for entry in data.get("relationships", []):
-		relationships.append(Relationship.from_dict(entry as Dictionary))
+		var r := Relationship.from_dict(entry as Dictionary)
+		# Restore live affinity carried in GameState (across scene swaps / saves);
+		# otherwise seed it from the authored JSON value.
+		var k := _pair_key(r.from_id, r.to_id)
+		if GameState.relationship_affinity.has(k):
+			r.affinity = int(GameState.relationship_affinity[k])
+			r.status = status_for(r.affinity)
+		else:
+			GameState.relationship_affinity[k] = r.affinity
+		relationships.append(r)
+
+
+static func _pair_key(a: String, b: String) -> String:
+	return "%s|%s" % [a, b] if a < b else "%s|%s" % [b, a]
 
 
 func status_for(affinity: int) -> String:
@@ -47,6 +60,7 @@ func adjust(a: String, b: String, delta: int) -> void:
 	var old_status: String = r.status
 	r.affinity = clampi(r.affinity + delta, 0, 100)
 	r.status = status_for(r.affinity)
+	GameState.relationship_affinity[_pair_key(r.from_id, r.to_id)] = r.affinity
 	EventBus.relationship_changed.emit(r.from_id, r.to_id, r.affinity)
 	if old_status != "healthy" and r.status == "healthy":
 		EventBus.conflict_resolved.emit(r.from_id, r.to_id, r.affinity)

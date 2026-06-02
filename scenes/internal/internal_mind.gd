@@ -49,6 +49,10 @@ func _ready() -> void:
 	_update_cards()
 	_update_objective()
 
+	# Autosave on entering this view so the run can be resumed from the title.
+	GameState.current_scene = scene_file_path
+	SaveManager.save()
+
 
 # --- Graph construction ---
 
