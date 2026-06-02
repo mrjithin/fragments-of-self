@@ -13,6 +13,7 @@ var flags: Dictionary = {}             # arbitrary scripted flags, e.g. "conflic
 var current_task_id: String = ""       # task the player went inward to handle
 var assigned_alter_id: String = ""     # alter chosen in the mind to handle it
 var current_scene: String = ""         # last gameplay scene, for resume-on-Continue
+var last_outcome_penalty: int = 0      # alignment lost to a strained assigned alter (per day)
 
 # Live mutable system state. Centralised here (the documented single source of truth)
 # so it survives the External↔Internal scene swaps and can be serialized for saves.
@@ -34,12 +35,25 @@ func reset_run() -> void:
 	current_task_id = ""
 	assigned_alter_id = ""
 	current_scene = ""
+	last_outcome_penalty = 0
 	alter_stress.clear()
 	relationship_affinity.clear()
 	stress_before.clear()
 	relationship_log.clear()
 	unlocked_memories.clear()
 	surfaced_facts.clear()
+
+
+## Move to the next day: bump the counter and clear per-day state, while keeping
+## cumulative progress (alignment, mystery, and live alter/relationship state).
+func advance_day() -> void:
+	day += 1
+	flags.clear()
+	current_task_id = ""
+	assigned_alter_id = ""
+	last_outcome_penalty = 0
+	relationship_log.clear()
+	stress_before.clear()
 
 
 func set_flag(flag: String, value: bool = true) -> void:
@@ -74,6 +88,7 @@ func to_dict() -> Dictionary:
 		"current_task_id": current_task_id,
 		"assigned_alter_id": assigned_alter_id,
 		"current_scene": current_scene,
+		"last_outcome_penalty": last_outcome_penalty,
 		"alter_stress": alter_stress,
 		"relationship_affinity": relationship_affinity,
 		"stress_before": stress_before,
@@ -91,6 +106,7 @@ func from_dict(d: Dictionary) -> void:
 	current_task_id = str(d.get("current_task_id", ""))
 	assigned_alter_id = str(d.get("assigned_alter_id", ""))
 	current_scene = str(d.get("current_scene", ""))
+	last_outcome_penalty = int(d.get("last_outcome_penalty", 0))
 
 	flags.clear()
 	for k in d.get("flags", {}):

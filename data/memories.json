@@ -4,6 +4,11 @@
 			"title": "The Treehouse",
 			"text": "A small wooden door. A blanket fort lit by a flashlight. A voice, gentle, promising that no matter what happened downstairs, in here they would always be safe.",
 			"mystery_tag": "origin"
+		},
+		"m_porch": {
+			"title": "The Porch",
+			"text": "Two kids on a cold porch step, sharing one coat. 'I've got you,' the older one whispered. Someone learned, very early, how to be the safe place for someone else.",
+			"mystery_tag": "origin"
 		}
 	}
 }

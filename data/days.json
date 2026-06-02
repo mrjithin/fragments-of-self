@@ -1,0 +1,7 @@
+{
+	"_comment": "The run's days, in order. Each day points to an external situation; optional 'setup' seeds that day's starting pressures (absolute alter stress / relationship affinity).",
+	"days": [
+		{ "situation": "res://data/external_situation.json" },
+		{ "situation": "res://data/external_situation_day2.json", "setup": { "stress": { "june": 72 } } }
+	]
+}

@@ -11,6 +11,18 @@
 				"rowan": {"tier": "strain", "align": 0, "branch": "ext_outcome_rowan"}
 			},
 			"default_branch": "ext_outcome_june"
+		},
+		"friend_crisis": {
+			"title": "A friend in crisis",
+			"prompt": "A friend needs support tonight. Who answers?",
+			"required_skill": "empathy",
+			"time_cost": 35,
+			"outcomes": {
+				"june": {"tier": "best", "align": 2, "branch": "d2_out_june"},
+				"iris": {"tier": "ok", "align": 1, "branch": "d2_out_iris"},
+				"rowan": {"tier": "strain", "align": 0, "branch": "d2_out_rowan"}
+			},
+			"default_branch": "d2_out_iris"
 		}
 	}
 }

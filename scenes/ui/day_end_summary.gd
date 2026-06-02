@@ -4,6 +4,8 @@ extends Control
 
 const MEMORIES_PATH: String = "res://data/memories.json"
 const TITLE_SCENE: String = "res://scenes/ui/title_screen.tscn"
+const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
+const DAYS_PATH: String = "res://data/days.json"
 
 @onready var _title: Label = %TitleLabel
 @onready var _body: RichTextLabel = %SummaryBody
@@ -14,7 +16,10 @@ const TITLE_SCENE: String = "res://scenes/ui/title_screen.tscn"
 
 func _ready() -> void:
 	var summary: Dictionary = GameState.build_day_summary()
-	_title.text = "Day %d  —  a good start" % summary.get("day", 1)
+	var is_final: bool = GameState.day >= _total_days()
+	_title.text = "Day %d  —  the chapter closes" % summary.get("day", 1) if is_final \
+		else "Day %d  —  a good start" % summary.get("day", 1)
+	_continue.text = "Finish" if is_final else "Continue to Day %d" % (GameState.day + 1)
 	_body.text = _compose_body(summary)
 
 	var align: int = summary.get("alignment", 0)
@@ -50,9 +55,17 @@ func _compose_body(summary: Dictionary) -> String:
 			var title: String = all_mem.get(mem_id, {}).get("title", mem_id)
 			lines.append("[b]Memory recovered:[/b] %s" % title)
 
+	if GameState.last_outcome_penalty < 0:
+		lines.append("[b]A strained bond made today harder[/b] (alignment %d)." % GameState.last_outcome_penalty)
+
 	lines.append("")
 	lines.append("[i]Tomorrow brings new faces, and new pieces of the past…[/i]")
 	return "\n".join(lines)
+
+
+func _total_days() -> int:
+	var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
+	return maxi(1, days.size())
 
 
 func _alignment_path(align: int, align_max: int) -> String:
@@ -65,6 +78,11 @@ func _alignment_path(align: int, align_max: int) -> String:
 
 
 func _on_continue() -> void:
-	GameState.reset_run()
-	GameClock.reset_day()
-	SceneFlow.change_scene_to_file(TITLE_SCENE)
+	if GameState.day < _total_days():
+		GameState.advance_day()
+		GameClock.reset_day()
+		SceneFlow.change_scene_to_file(EXTERNAL_SCENE)
+	else:
+		GameState.reset_run()
+		GameClock.reset_day()
+		SceneFlow.change_scene_to_file(TITLE_SCENE)

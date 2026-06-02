@@ -52,6 +52,26 @@ func first_strained_for(alter_id: String) -> Relationship:
 	return null
 
 
+func has_any_strained() -> bool:
+	for r in relationships:
+		if r.status != "healthy":
+			return true
+	return false
+
+
+## Alignment penalty for sending an alter who has an unhealthy bond (the
+## relationship-affects-outcome rule): 0 if all healthy, -1 strained, -2 broken.
+func penalty_for(alter_id: String) -> int:
+	var worst: int = 0
+	for r in relationships:
+		if r.involves(alter_id):
+			if r.status == "broken":
+				worst = maxi(worst, 2)
+			elif r.status == "strained":
+				worst = maxi(worst, 1)
+	return -worst
+
+
 ## Apply an affinity delta to a pair, recompute status, and emit change signals.
 func adjust(a: String, b: String, delta: int) -> void:
 	var r: Relationship = get_between(a, b)

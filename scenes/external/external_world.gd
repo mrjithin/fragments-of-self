@@ -5,6 +5,7 @@ extends Node2D
 
 const SITUATION_PATH: String = "res://data/external_situation.json"
 const TASKS_PATH: String = "res://data/tasks.json"
+const DAYS_PATH: String = "res://data/days.json"
 const INTERNAL_SCENE: String = "res://scenes/internal/internal_mind.tscn"
 const DAY_END_SCENE: String = "res://scenes/ui/day_end_summary.tscn"
 
@@ -16,7 +17,12 @@ var _task: Task
 
 
 func _ready() -> void:
-	_situation = JsonLoader.load_dict(SITUATION_PATH)
+	# Pick the day's situation; apply its one-time starting pressures (once per day).
+	var cfg := _day_config(GameState.day)
+	if not GameState.has_flag("day_setup_done"):
+		_apply_day_setup(cfg.get("setup", {}))
+		GameState.set_flag("day_setup_done")
+	_situation = JsonLoader.load_dict(str(cfg.get("situation", SITUATION_PATH)))
 	_task = _load_task(_situation.get("task_id", ""))
 
 	_runner = DialogueRunner.new()
@@ -34,6 +40,23 @@ func _ready() -> void:
 	# Autosave on entering this view so the run can be resumed from the title.
 	GameState.current_scene = scene_file_path
 	SaveManager.save()
+
+
+func _day_config(day: int) -> Dictionary:
+	var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
+	if days.is_empty():
+		return {"situation": SITUATION_PATH}
+	var idx: int = clampi(day - 1, 0, days.size() - 1)
+	return days[idx] as Dictionary
+
+
+func _apply_day_setup(setup: Dictionary) -> void:
+	var stress: Dictionary = setup.get("stress", {})
+	for aid in stress:
+		GameState.alter_stress[aid] = clampi(int(stress[aid]), 0, 100)
+	var strain: Dictionary = setup.get("strain", {})
+	for key in strain:
+		GameState.relationship_affinity[key] = clampi(int(strain[key]), 0, 100)
 
 
 func _load_task(task_id: String) -> Task:
@@ -57,10 +80,19 @@ func _on_action(action: String) -> void:
 ## Resume the situation on the branch matching the alter chosen in the mind.
 func _play_outcome() -> void:
 	GameState.set_flag("outcome_played")
-	var outcome: Dictionary = _task.outcome_for(GameState.assigned_alter_id) if _task else {}
+	var assigned: String = GameState.assigned_alter_id
+	var outcome: Dictionary = _task.outcome_for(assigned) if _task else {}
 	var branch: String = outcome.get("branch", _situation.get("start", ""))
 	if _task:
 		GameClock.spend(_task.time_cost)
+	# Relationship-affects-outcome: sending an alter who still has a strained or
+	# broken bond costs alignment (you skipped mending it in the mind).
+	var rel_mgr := RelationshipManager.new()
+	rel_mgr.load_data()
+	var penalty: int = rel_mgr.penalty_for(assigned)
+	if penalty < 0:
+		GameState.last_outcome_penalty = penalty
+		GameState.add_alignment(penalty)
 	EventBus.objective_changed.emit("")
 	_runner.start(branch)
 

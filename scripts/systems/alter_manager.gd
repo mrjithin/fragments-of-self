@@ -32,6 +32,20 @@ func get_alter(alter_id: String) -> Alter:
 	return alters.get(alter_id, null)
 
 
+func any_stressed() -> bool:
+	for id in alters:
+		if alters[id].is_stressed():
+			return true
+	return false
+
+
+func first_stressed() -> Alter:
+	for id in order:
+		if alters[id].is_stressed():
+			return alters[id]
+	return null
+
+
 func adjust_stress(alter_id: String, delta: int) -> void:
 	var a: Alter = get_alter(alter_id)
 	if a == null:
