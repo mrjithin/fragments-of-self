@@ -27,6 +27,7 @@ func change_scene_to_file(path: String, fade_time: float = DEFAULT_FADE) -> void
 	if packed == null:
 		push_error("SceneFlow: could not load scene %s" % path)
 		return
+	EventBus.scene_changed.emit(path)   # let Music swap ambience under the fade
 	await change_scene(packed, fade_time)
 
 

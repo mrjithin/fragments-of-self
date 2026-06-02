@@ -22,5 +22,8 @@ signal did_fact_surfaced(fact_id: String)
 signal time_spent(amount: int, remaining: int)
 signal day_ended(summary: Dictionary)
 
+# --- Presentation ---
+signal scene_changed(scene_path: String)   # SceneFlow announces each swap (drives Music)
+
 # --- Guidance (drives the HUD objective hint for the guided demo) ---
 signal objective_changed(text: String)
