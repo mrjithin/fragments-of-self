@@ -11,7 +11,8 @@ const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
 const TASK_BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
 
 const CONFLICT_TIME_COST: int = 20
-const REST_TIME_COST: int = 15
+const REST_TIME_COST: int = 20
+const REST_RELIEF: int = 35          # partial — rest eases, it doesn't erase
 
 const COLOR_HEALTHY: Color = Color(0.45, 0.62, 0.48, 0.75)
 const COLOR_STRAINED: Color = Color(0.86, 0.62, 0.32, 0.9)
@@ -130,13 +131,13 @@ func _on_alter_selected(alter_id: String) -> void:
 # --- Card state ---
 
 func _update_cards() -> void:
-	# Gate: you must calm any overwhelmed alter before sending anyone. Mending a
-	# strained bond is optional — but skipping it costs you at the outcome (penalty).
-	var ready_to_assign: bool = not _alter_mgr.any_stressed()
+	# No gate — anyone can be sent. Rest is offered when an alter is overwhelmed
+	# (it eases stress but costs time); Talk mends a strained bond (optional, but
+	# skipping it costs you at the outcome). The strategy is the tradeoff, not a lock.
 	for id in _cards:
 		var alter: Alter = _alter_mgr.get_alter(id)
 		var strained: Relationship = _rel_mgr.first_strained_for(id)
-		_cards[id].set_actions(strained != null, alter.is_stressed(), ready_to_assign)
+		_cards[id].set_actions(strained != null, alter.is_stressed(), true)
 		_cards[id].refresh_stats(alter)
 
 
@@ -187,7 +188,7 @@ func _on_conflict_resolved(_a: String, _b: String, _affinity: int) -> void:
 # --- Rejuvenation ---
 
 func _on_rest(alter_id: String) -> void:
-	_alter_mgr.adjust_stress(alter_id, -50)
+	_alter_mgr.adjust_stress(alter_id, -REST_RELIEF)
 	EventBus.alter_sent_to_rejuvenation.emit(alter_id)
 	GameClock.spend(REST_TIME_COST)
 	GameState.set_flag("rested")
@@ -198,8 +199,8 @@ func _on_rest(alter_id: String) -> void:
 # --- Assignment / handoff back ---
 
 func _on_assign(alter_id: String) -> void:
-	if _alter_mgr.any_stressed():
-		return
+	# No wall: you may send anyone. Sending an overwhelmed or ill-suited alter just
+	# costs you at the outcome — that tradeoff is the point, not a forced rest.
 	GameState.assigned_alter_id = alter_id
 	EventBus.alter_assigned_to_task.emit(alter_id, GameState.current_task_id)
 	EventBus.exit_mind_requested.emit(alter_id)
@@ -211,8 +212,8 @@ func _on_assign(alter_id: String) -> void:
 func _update_objective() -> void:
 	var stressed: Alter = _alter_mgr.first_stressed()
 	if stressed != null:
-		EventBus.objective_changed.emit("%s is overwhelmed — press Rest before anyone faces the day." % stressed.name)
+		EventBus.objective_changed.emit("%s is overwhelmed — Rest eases it (costs time), or Send them anyway and pay for it. Mind their triggers." % stressed.name)
 	elif _rel_mgr.has_any_strained():
-		EventBus.objective_changed.emit("A bond is strained (amber edge). Mend it with Talk for a better outcome — or Send anyway.")
+		EventBus.objective_changed.emit("A bond is strained (amber edge). Mend it with Talk for a better outcome — or Send anyway and take the hit.")
 	else:
-		EventBus.objective_changed.emit("Press Send on whoever should face the task — play to their strengths.")
+		EventBus.objective_changed.emit("Send whoever fits the task — play to their strengths and avoid what triggers them.")

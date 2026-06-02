@@ -6,6 +6,7 @@ var id: String = ""
 var title: String = ""
 var prompt: String = ""
 var required_skill: String = ""
+var trigger: String = ""             # situation pressure; spikes an alter sharing this trigger
 var time_cost: int = 0
 var outcomes: Dictionary = {}        # alter_id -> {tier, align, branch}
 var default_branch: String = ""
@@ -17,6 +18,7 @@ static func from_dict(task_id: String, d: Dictionary) -> Task:
 	t.title = d.get("title", "")
 	t.prompt = d.get("prompt", "")
 	t.required_skill = d.get("required_skill", "")
+	t.trigger = d.get("trigger", "")
 	t.time_cost = int(d.get("time_cost", 0))
 	t.outcomes = d.get("outcomes", {})
 	t.default_branch = d.get("default_branch", "")

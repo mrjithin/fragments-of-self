@@ -9,7 +9,25 @@
 		},
 		"ext_intro_2": {
 			"speaker": "Narration",
-			"text": "An interview. This afternoon. The first real chance in months.",
+			"text": "An interview. This afternoon. The first real chance in months. The clock on the wall is already loud.",
+			"next": "ext_prep"
+		},
+		"ext_prep": {
+			"speaker": "Narration",
+			"text": "There's a sliver of time before they have to leave. What matters most right now?",
+			"choices": [
+				{"text": "Steady the body — breathe, feet on the floor.", "next": "ext_prep_calm", "consequence": {"set_flag": "prepared_calm"}},
+				{"text": "Drill the answers, one more time, faster.", "next": "ext_prep_drill", "consequence": {"set_flag": "prepared_drill"}}
+			]
+		},
+		"ext_prep_calm": {
+			"speaker": "Narration",
+			"text": "Three slow breaths. The kitchen stops spinning. Whoever steps forward will start from steadier ground.",
+			"next": "ext_intro_3"
+		},
+		"ext_prep_drill": {
+			"speaker": "Narration",
+			"text": "Question after question, rehearsed until the words blur. Sharper, maybe — but the chest is tighter than before.",
 			"next": "ext_intro_3"
 		},
 		"ext_intro_3": {
