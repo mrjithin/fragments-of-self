@@ -1,0 +1,13 @@
+{
+	"comment": "Seed affinities between alters (0-100, default 50). Key order does not matter.",
+	"bonds": [
+		{ "a": "lumen", "b": "wren", "affinity": 62 },
+		{ "a": "wren", "b": "sol", "affinity": 58 },
+		{ "a": "lumen", "b": "sol", "affinity": 50 },
+		{ "a": "wren", "b": "echo", "affinity": 66 },
+		{ "a": "lumen", "b": "vesper", "affinity": 38 },
+		{ "a": "vesper", "b": "echo", "affinity": 60 },
+		{ "a": "sol", "b": "iris", "affinity": 56 },
+		{ "a": "echo", "b": "iris", "affinity": 60 }
+	]
+}

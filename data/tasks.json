@@ -1,0 +1,20 @@
+{
+	"tasks": [
+		{ "id": "school_presentation", "title": "Class presentation", "desc": "Stand in front of the class and speak.", "skill": "Social", "difficulty": 3, "stress_cost": 20, "memory_id": "m_school" },
+		{ "id": "comfort_friend", "title": "Comfort a friend", "desc": "A friend is crying. Be there for them.", "skill": "Calm", "difficulty": 2, "stress_cost": 15, "memory_id": "" },
+		{ "id": "exam_study", "title": "Study for the exam", "desc": "Tomorrow's test won't wait.", "skill": "Focus", "difficulty": 3, "stress_cost": 18, "memory_id": "" },
+		{ "id": "confront_bully", "title": "Stand up to the bully", "desc": "Someone is making the world feel unsafe.", "skill": "Courage", "difficulty": 4, "stress_cost": 25, "memory_id": "m_bully" },
+		{ "id": "art_project", "title": "Finish the art project", "desc": "Turn the feeling into something you can hold.", "skill": "Creative", "difficulty": 2, "stress_cost": 12, "memory_id": "" },
+		{ "id": "family_dinner", "title": "Family dinner", "desc": "Get through the tense table talk.", "skill": "Social", "difficulty": 2, "stress_cost": 22, "memory_id": "m_home" },
+		{ "id": "doctor_visit", "title": "Doctor's visit", "desc": "Stay grounded in the waiting room.", "skill": "Calm", "difficulty": 3, "stress_cost": 18, "memory_id": "" },
+		{ "id": "job_interview", "title": "Job interview", "desc": "Be the version of you they need to see.", "skill": "Social", "difficulty": 4, "stress_cost": 24, "memory_id": "" },
+		{ "id": "late_night", "title": "Quiet the late-night spiral", "desc": "The thoughts get loud after midnight.", "skill": "Calm", "difficulty": 4, "stress_cost": 20, "memory_id": "m_night" },
+		{ "id": "help_sibling", "title": "Protect a younger sibling", "desc": "Someone smaller needs you tonight.", "skill": "Courage", "difficulty": 2, "stress_cost": 16, "memory_id": "m_sibling" },
+		{ "id": "therapy_session", "title": "Open up in therapy", "desc": "Try to put the years into words.", "skill": "Calm", "difficulty": 3, "stress_cost": 14, "memory_id": "m_therapy" },
+		{ "id": "journal", "title": "Write in the journal", "desc": "Let the pages carry some of the weight.", "skill": "Creative", "difficulty": 3, "stress_cost": 10, "memory_id": "" },
+		{ "id": "make_a_friend", "title": "Let someone get close", "desc": "Trust is terrifying. Try anyway.", "skill": "Social", "difficulty": 3, "stress_cost": 14, "memory_id": "m_friend" },
+		{ "id": "first_day", "title": "First day somewhere new", "desc": "New faces, new rules, old fears.", "skill": "Social", "difficulty": 2, "stress_cost": 16, "memory_id": "m_firstday" },
+		{ "id": "perform_music", "title": "Play at the recital", "desc": "Let the feeling out through music.", "skill": "Creative", "difficulty": 4, "stress_cost": 18, "memory_id": "" },
+		{ "id": "hard_conversation", "title": "A hard conversation", "desc": "Say the thing that has gone unsaid.", "skill": "Courage", "difficulty": 3, "stress_cost": 20, "memory_id": "" }
+	]
+}

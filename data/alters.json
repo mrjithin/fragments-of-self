@@ -1,0 +1,70 @@
+{
+	"alters": [
+		{
+			"id": "lumen",
+			"name": "Lumen",
+			"role": "The Protector",
+			"skill": "Courage",
+			"skill_level": 3,
+			"stress": 20,
+			"color": "#e8a35c",
+			"desc": "First to stand between you and the world. Steady, warm, tired.",
+			"spawn_day": 0
+		},
+		{
+			"id": "wren",
+			"name": "Wren",
+			"role": "The Caretaker",
+			"skill": "Calm",
+			"skill_level": 3,
+			"stress": 15,
+			"color": "#8fc7a0",
+			"desc": "Hums songs no one taught them. Soothes the others when nights are long.",
+			"spawn_day": 0
+		},
+		{
+			"id": "sol",
+			"name": "Sol",
+			"role": "The Scholar",
+			"skill": "Focus",
+			"skill_level": 2,
+			"stress": 10,
+			"color": "#7fa8d8",
+			"desc": "Knows the right words. Steps forward so you don't have to.",
+			"spawn_day": 0
+		},
+		{
+			"id": "echo",
+			"name": "Echo",
+			"role": "The Little One",
+			"skill": "Social",
+			"skill_level": 1,
+			"stress": 25,
+			"color": "#e8a0c4",
+			"desc": "Small and bright. Holds the playfulness the others had to set down.",
+			"spawn_day": 2
+		},
+		{
+			"id": "vesper",
+			"name": "Vesper",
+			"role": "The Guardian",
+			"skill": "Courage",
+			"skill_level": 4,
+			"stress": 30,
+			"color": "#c96f6f",
+			"desc": "Arrived when courage alone wasn't enough. Fierce, watchful, loyal.",
+			"spawn_day": 4
+		},
+		{
+			"id": "iris",
+			"name": "Iris",
+			"role": "The Dreamer",
+			"skill": "Creative",
+			"skill_level": 3,
+			"stress": 12,
+			"color": "#b79ee0",
+			"desc": "Turns the hard parts into colour. Sees doors where others see walls.",
+			"spawn_day": 5
+		}
+	]
+}
