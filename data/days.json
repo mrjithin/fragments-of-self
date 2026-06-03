@@ -23,7 +23,8 @@
 		},
 		{
 			"tasks": [
-				"res://data/external_situation_day4.json"
+				"res://data/external_situation_day4.json",
+				"res://data/door_situation.json"
 			],
 			"setup": { "strain": { "iris|rowan": 25 } }
 		}

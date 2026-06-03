@@ -150,6 +150,19 @@
 				"rowan": {"tier": "strain", "align": 0, "branch": "c_strain"}
 			},
 			"default_branch": "c_ok"
+		},
+		"stand_ground": {
+			"title": "Holding the line",
+			"prompt": "Someone pushes for more than you can give. Who holds the boundary without a fight?",
+			"required_skill": "boundaries",
+			"trigger": "conflict",
+			"time_cost": 30,
+			"outcomes": {
+				"iris": {"tier": "best", "align": 2, "branch": "dr_strong"},
+				"rowan": {"tier": "ok", "align": 1, "branch": "dr_ok"},
+				"june": {"tier": "strain", "align": 0, "branch": "dr_strain"}
+			},
+			"default_branch": "dr_ok"
 		}
 	}
 }
