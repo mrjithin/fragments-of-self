@@ -137,6 +137,19 @@
 				"june": {"tier": "strain", "align": 0, "branch": "b_strain"}
 			},
 			"default_branch": "b_ok"
+		},
+		"calm_the_child": {
+			"title": "A child in tears",
+			"prompt": "A kid is sobbing in the hall. Who can be gentle without flinching at the noise?",
+			"required_skill": "empathy",
+			"trigger": "raised voices",
+			"time_cost": 25,
+			"outcomes": {
+				"june": {"tier": "best", "align": 2, "branch": "c_strong"},
+				"iris": {"tier": "ok", "align": 1, "branch": "c_ok"},
+				"rowan": {"tier": "strain", "align": 0, "branch": "c_strain"}
+			},
+			"default_branch": "c_ok"
 		}
 	}
 }

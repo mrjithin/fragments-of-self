@@ -16,7 +16,8 @@
 		},
 		{
 			"tasks": [
-				"res://data/external_situation_day3.json"
+				"res://data/external_situation_day3.json",
+				"res://data/child_situation.json"
 			],
 			"setup": { "stress": { "iris": 70 } }
 		},
