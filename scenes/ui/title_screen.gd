@@ -12,6 +12,21 @@ func _ready() -> void:
 	_quit.pressed.connect(_on_quit)
 	if SaveManager.has_save():
 		_add_continue_button()
+	_add_content_note()
+
+
+## A short, respectful framing note — important for the subject matter and for anyone
+## meeting the game cold.
+func _add_content_note() -> void:
+	var note := Label.new()
+	note.text = "An empathetic portrayal of Dissociative Identity Disorder — a real condition rooted in childhood trauma. A story of coping and care, not horror. Gentle themes of stress and the past throughout."
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note.custom_minimum_size = Vector2(440, 0)
+	note.add_theme_font_size_override("font_size", 12)
+	note.modulate = Color(1, 1, 1, 0.6)
+	var menu: Node = _new_game.get_parent()
+	menu.add_child(note)
 
 
 ## Inserts a Continue button above New Game when a save exists, matching its style.
