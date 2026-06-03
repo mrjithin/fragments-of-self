@@ -44,11 +44,12 @@ func _ready() -> void:
 	_check("right alter: only modest stress (+15 -> 50)", GameState.alter_stress["iris"] == 50)
 
 	# B) Wrong call: rowan, overwhelmed (80), hit by his 'deadlines' trigger, bond strained.
-	# -2 trigger, -1 stressed, -1 bond, and stress maxes to 100 -> breaking point -1 = -5.
+	# Risk p clamps to 0.9 -> he falters (seeded): demoted to the strain branch (align 0),
+	# stress spikes past 100 (breaking point, -1). From base 6: 6 + 0 - 1 = 5.
 	await _play("rowan", {"manager": 10, "iris": 35, "rowan": 80, "june": 25}, false, 6)
-	_check("wrong alter: alignment drops (6 -5 = 1)", GameState.ending_alignment == 1)
+	_check("wrong alter: faltered, alignment drops (6 + 0 - 1 = 5)", GameState.ending_alignment == 5)
 	_check("wrong alter: stress spikes and clamps to 100", GameState.alter_stress["rowan"] == 100)
-	_check("wrong alter: breaking-point penalty recorded (-5)", GameState.last_outcome_penalty == -5)
+	_check("wrong alter: breaking-point penalty recorded (-1)", GameState.last_outcome_penalty == -1)
 
 	# C) Prep choice feeds the stress system: 'drill' lands harder than 'calm'.
 	await _play("june", calm, true, 0)

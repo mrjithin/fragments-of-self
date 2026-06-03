@@ -30,6 +30,7 @@ var relationship_log: Array[Dictionary] = []   # [{pair, from_status, to_status}
 var unlocked_memories: Array[String] = []
 var surfaced_facts: Array[String] = []
 var seen_events: Array[String] = []    # random events already rolled (no-repeat, persists)
+var discovered_triggers: Array[String] = [] # triggers learned by hitting them (revealed on cards)
 
 
 func reset_run() -> void:
@@ -50,6 +51,7 @@ func reset_run() -> void:
 	unlocked_memories.clear()
 	surfaced_facts.clear()
 	seen_events.clear()
+	discovered_triggers.clear()
 
 
 ## Move to the next day: bump the counter and clear per-day state, while keeping
@@ -119,6 +121,7 @@ func to_dict() -> Dictionary:
 		"unlocked_memories": unlocked_memories,
 		"surfaced_facts": surfaced_facts,
 		"seen_events": seen_events,
+		"discovered_triggers": discovered_triggers,
 	}
 
 
@@ -161,6 +164,10 @@ func from_dict(d: Dictionary) -> void:
 	seen_events.clear()
 	for ev in d.get("seen_events", []):
 		seen_events.append(str(ev))
+
+	discovered_triggers.clear()
+	for tg in d.get("discovered_triggers", []):
+		discovered_triggers.append(str(tg))
 
 
 func _to_int_dict(src: Dictionary) -> Dictionary:

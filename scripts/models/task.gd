@@ -30,3 +30,13 @@ func outcome_for(alter_id: String) -> Dictionary:
 	if outcomes.has(alter_id):
 		return outcomes[alter_id]
 	return {"tier": "ok", "align": 0, "branch": default_branch}
+
+
+## The narrative branch authored for a given outcome tier (best/ok/strain), reused
+## when a coping roll lands a different tier than the alter's aptitude. Falls back to
+## the default branch if no branch carries that tier.
+func branch_for_tier(tier: String) -> String:
+	for v in outcomes.values():
+		if str(v.get("tier", "")) == tier:
+			return str(v.get("branch", ""))
+	return default_branch

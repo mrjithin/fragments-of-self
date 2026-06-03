@@ -14,6 +14,7 @@ const STRESS_FILL: Color = Color(0.85, 0.45, 0.35)
 
 const COL_GOOD: Color = Color(0.55, 0.78, 0.56)
 const COL_WARN: Color = Color(0.94, 0.62, 0.34)
+const COL_BAD: Color = Color(0.86, 0.42, 0.40)
 const COL_DIM: Color = Color(0.82, 0.78, 0.74, 0.6)
 
 @onready var _portrait: TextureRect = $Margin/VBox/Top/Portrait
@@ -73,8 +74,7 @@ func setup(alter: Alter) -> void:
 	_vbox.add_child(_meta)
 	_vbox.move_child(_meta, _stress_bar.get_index())   # sits just above the stress bar
 	var strengths: String = ", ".join(alter.skills) if not alter.skills.is_empty() else "—"
-	var avoids: String = ", ".join(alter.triggers) if not alter.triggers.is_empty() else "—"
-	_meta.text = "Good at: %s   ·   Triggers: %s" % [strengths, avoids]
+	_meta.text = "Good at: %s   ·   Triggers: %s" % [strengths, _trigger_hint(alter.triggers)]
 	_meta.add_theme_color_override("font_color", COL_DIM)
 
 	# How they fit the task at hand (filled in by set_task_context).
@@ -103,26 +103,48 @@ func refresh_stats(alter: Alter) -> void:
 	tween.tween_property(_stress_bar, "value", float(alter.stress), 0.4).set_trans(Tween.TRANS_SINE)
 
 
-## Show how this alter fits the current task: a green nudge if suited, an amber
-## warning if the task hits their trigger, plus an overwhelmed note.
-func set_task_context(required_skill: String, trigger: String) -> void:
+## Triggers stay hidden until the player has learned them by getting burned.
+func _trigger_hint(triggers: Array) -> String:
+	if triggers.is_empty():
+		return "—"
+	var shown: PackedStringArray = []
+	var hidden: bool = false
+	for t in triggers:
+		if GameState.discovered_triggers.has(t):
+			shown.append(str(t))
+		else:
+			hidden = true
+	if shown.is_empty():
+		return "? (unknown)"
+	if hidden:
+		shown.append("?")
+	return ", ".join(shown)
+
+
+func _band_color(key: String) -> Color:
+	match key:
+		"good": return COL_GOOD
+		"warn": return COL_WARN
+		"bad": return COL_BAD
+		_: return COL_DIM
+
+
+## Show the coping ODDS for this task (a coarse band, never a guarantee) plus a known
+## trigger warning. Hidden triggers don't show — they surface only after you've hit them.
+func set_task_context(_required_skill: String, trigger: String, band: Dictionary = {}) -> void:
 	if _advice == null:
 		return
-	var suited: bool = required_skill != "" and _skills.has(required_skill)
-	var triggered: bool = trigger != "" and _triggers.has(trigger)
 	var parts: PackedStringArray = []
-	var col: Color = COL_DIM
-	if triggered:
-		parts.append("⚠ This hits their trigger (%s)" % trigger)
+	var col: Color = _band_color(str(band.get("key", "dim")))
+	var band_text: String = str(band.get("text", ""))
+	if band_text != "":
+		parts.append(band_text)
+	var triggered: bool = trigger != "" and _triggers.has(trigger)
+	if triggered and GameState.discovered_triggers.has(trigger):
+		parts.append("⚠ hits their trigger (%s)" % trigger)
 		col = COL_WARN
-	elif suited:
-		parts.append("✓ Plays to their strength")
-		col = COL_GOOD
-	else:
-		parts.append("• Not their strength")
 	if _stressed:
-		parts.append("already overwhelmed")
-		col = COL_WARN
+		parts.append("overwhelmed")
 	_advice.text = "  —  ".join(parts)
 	_advice.add_theme_color_override("font_color", col)
 
