@@ -5,6 +5,7 @@ extends Control
 const MEMORIES_PATH: String = "res://data/memories.json"
 const TITLE_SCENE: String = "res://scenes/ui/title_screen.tscn"
 const BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
+const ENDING_SCENE: String = "res://scenes/ui/ending.tscn"
 const DAYS_PATH: String = "res://data/days.json"
 
 @onready var _title: Label = %TitleLabel
@@ -110,6 +111,5 @@ func _on_continue() -> void:
 		GameClock.reset_day()
 		SceneFlow.change_scene_to_file(BOARD_SCENE)
 	else:
-		GameState.reset_run()
-		GameClock.reset_day()
-		SceneFlow.change_scene_to_file(TITLE_SCENE)
+		# Final day -> the payoff ending (which resets the run on its way out).
+		SceneFlow.change_scene_to_file(ENDING_SCENE)

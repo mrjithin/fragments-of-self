@@ -9,6 +9,7 @@ const SCENES: Array[String] = [
 	"res://scenes/external/external_world.tscn",
 	"res://scenes/internal/internal_mind.tscn",
 	"res://scenes/ui/day_end_summary.tscn",
+	"res://scenes/ui/ending.tscn",
 	"res://scenes/ui/dialogue_box.tscn",
 	"res://scenes/ui/hud.tscn",
 	"res://scenes/ui/memory_reveal.tscn",

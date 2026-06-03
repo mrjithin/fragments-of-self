@@ -163,6 +163,19 @@
 				"june": {"tier": "strain", "align": 0, "branch": "dr_strain"}
 			},
 			"default_branch": "dr_ok"
+		},
+		"the_telling": {
+			"title": "Telling the whole of it",
+			"prompt": "A first real chance to put the past into words. Who can stay present while it surfaces?",
+			"required_skill": "listening",
+			"trigger": "raised voices",
+			"time_cost": 40,
+			"outcomes": {
+				"june": {"tier": "best", "align": 2, "branch": "t_strong"},
+				"iris": {"tier": "ok", "align": 1, "branch": "t_ok"},
+				"rowan": {"tier": "strain", "align": 0, "branch": "t_strain"}
+			},
+			"default_branch": "t_ok"
 		}
 	}
 }
