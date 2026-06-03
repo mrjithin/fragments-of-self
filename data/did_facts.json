@@ -19,6 +19,10 @@
 		"f_treatment": {
 			"title": "Did you know?",
 			"text": "DID is treatable. With safety and good therapy, alters can learn to cooperate, and many people reach a stable, fulfilling life. Integration is one possible goal — not a cure imposed from outside."
+		},
+		"f_recovery": {
+			"title": "Did you know?",
+			"text": "Healing from trauma rarely means forgetting. More often it's being able to tell the story — safely, in your own time, to someone who listens — until it no longer controls you."
 		}
 	}
 }

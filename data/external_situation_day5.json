@@ -1,0 +1,41 @@
+{
+	"start": "t_1",
+	"task_id": "the_telling",
+	"nodes": {
+		"t_1": {
+			"speaker": "Narration",
+			"text": "A quiet room. A patient voice across from you: \"Whenever you're ready. All of you.\" For the first time, there's space to put the whole of it into words.",
+			"next": "t_2"
+		},
+		"t_2": {
+			"speaker": "Narration",
+			"text": "It will take someone who can stay present while the past comes up. Who speaks for the system?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"t_strong": {
+			"speaker": "Narration",
+			"text": "The words come slowly, then steadily — one voice making room for the others. Nothing is rushed, nothing is hidden. For once, the system tells its story together.",
+			"on_enter": {"align": 2, "unlock_memory": "m_whole", "surface_fact": "f_recovery"},
+			"next": "t_done"
+		},
+		"t_ok": {
+			"speaker": "Narration",
+			"text": "It comes out in pieces, with long pauses — but it comes out. Some of it, said aloud at last, loosens its grip.",
+			"on_enter": {"align": 1, "unlock_memory": "m_whole", "surface_fact": "f_recovery"},
+			"next": "t_done"
+		},
+		"t_strain": {
+			"speaker": "Narration",
+			"text": "It's hard, and it stalls, and the room gets very quiet. But even saying a little of it, to someone who listens, is not nothing.",
+			"on_enter": {"align": 0, "unlock_memory": "m_whole", "surface_fact": "f_recovery"},
+			"next": "t_done"
+		},
+		"t_done": {
+			"speaker": "Narration",
+			"text": "You walk out into the evening lighter than you came in. The story isn't finished — but it's begun to be told.",
+			"next": "END_TASK"
+		}
+	}
+}
