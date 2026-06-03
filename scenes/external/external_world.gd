@@ -60,16 +60,15 @@ func _on_action(action: String) -> void:
 		SceneFlow.change_scene_to_file(INTERNAL_SCENE)
 
 
-## Resume on the chosen alter's branch and resolve the real consequences of that
-## choice: the work tires them (stress, which persists across days), facing a task
-## that hits their trigger shakes them hard, an unmended bond costs alignment, and
-## sending someone already overwhelmed costs more. Caring for the right part of the
-## self — matching strengths, avoiding triggers, mending bonds — is how you do well.
+## Resume on the chosen alter's branch and resolve the consequences. The alter
+## usually performs at their APTITUDE for the task, but RISK — high stress, a strained
+## bond, or a task that hits their trigger — gives a real, seeded chance to FALTER a
+## tier (worse branch, more stress, maybe a breaking point). Safe, suited, calm play
+## stays reliable; taking a risk is a genuine gamble. Mirrors that you can't perfectly
+## predict how a part will cope — you do your best with what you can see.
 func _play_outcome() -> void:
 	GameState.set_flag("outcome_played")
 	var assigned: String = GameState.assigned_alter_id
-	var outcome: Dictionary = _task.outcome_for(assigned) if _task else {}
-	var branch: String = outcome.get("branch", _situation.get("start", ""))
 	if _task:
 		GameClock.spend(_task.time_cost)
 
@@ -79,62 +78,71 @@ func _play_outcome() -> void:
 	var rel_mgr := RelationshipManager.new()
 	rel_mgr.load_data()
 
-	var notes: PackedStringArray = []
-	var extra_align: int = 0
-	var stress_add: int = 15                          # any task is tiring
+	var authored: Dictionary = _task.outcome_for(assigned) if _task else {}
+	var aptitude: String = str(authored.get("tier", "ok"))
 
-	# A mid-situation choice shifts how the work lands: easing first costs nothing but
-	# gentleness; pushing buys a little more alignment now at the price of stress that
-	# compounds into later days. A genuine, non-obvious tradeoff.
+	var triggered: bool = _task != null and alter != null and _task.trigger != "" and alter.triggers.has(_task.trigger)
+	var was_stressed: bool = alter != null and alter.is_stressed()
+	var strained: bool = rel_mgr.penalty_for(assigned) < 0
+
+	# The gamble. No risk factors -> p == 0 -> no roll, deterministic safe outcome.
+	var p: float = Coping.falter_chance(alter, _task, rel_mgr, false)
+	var faltered: bool = p > 0.0 and RNG.randf_unit() < p
+
+	var notes: PackedStringArray = []
+	var stress_add: int = 15                          # any task is tiring
+	var extra_align: int = 0
+
+	# Mid-situation prep choice: a real tradeoff baked into the stress system.
 	if GameState.has_flag("prep_eased"):
 		stress_add -= 5
-		notes.append("Steadied beforehand, it landed a little softer.")
+		notes.append("Eased in beforehand — it landed a little softer.")
 	elif GameState.has_flag("prep_pushed"):
 		stress_add += 5
 		extra_align += 1
-		notes.append("They pushed hard — sharper today, but it'll cost them later.")
+		notes.append("Pushed hard — sharper now, but it'll cost them later.")
 	GameState.flags.erase("prep_eased")
 	GameState.flags.erase("prep_pushed")
 
-	if _task and alter and _task.required_skill != "" and alter.has_skill(_task.required_skill):
-		notes.append("%s played to their strength." % alter.name)
-	else:
-		notes.append("%s was out of their depth." % (alter.name if alter else "They"))
+	var result_tier: String = aptitude
+	if faltered:
+		result_tier = Coping.demote(aptitude)
+		stress_add += 15
+		notes.append("It got away from %s." % (alter.name if alter else "them"))
+		if triggered:
+			stress_add += 25
+			notes.append("Their trigger (%s) caught them." % _task.trigger)
+		if was_stressed:
+			stress_add += 10
+	elif triggered or was_stressed or strained:
+		notes.append("Risky — but %s held it together." % (alter.name if alter else "they"))
 
-	var triggered: bool = _task and alter and _task.trigger != "" and alter.triggers.has(_task.trigger)
-	if triggered:
-		extra_align -= 2
-		stress_add += 35
-		notes.append("It hit their trigger (%s) — they're badly shaken." % _task.trigger)
+	# You learn a trigger by living it; only then is it revealed on the cards.
+	if triggered and _task.trigger != "" and not GameState.discovered_triggers.has(_task.trigger):
+		GameState.discovered_triggers.append(_task.trigger)
 
-	if alter and alter.is_stressed():
-		extra_align -= 1
-		stress_add += 10
-		notes.append("Sent already overwhelmed — it took a toll.")
+	var branch: String = _task.branch_for_tier(result_tier) if _task else str(_situation.get("start", ""))
+	if branch == "":
+		branch = str(authored.get("branch", _situation.get("start", "")))
 
-	var penalty: int = rel_mgr.penalty_for(assigned)
-	if penalty < 0:
-		extra_align += penalty
-		notes.append("A strained bond made it harder.")
-
-	# Apply the stress and watch for a breaking point — the tangible bad outcome.
+	# Stress + the breaking-point beat.
 	var before: int = alter.stress if alter else 0
 	var after: int = clampi(before + stress_add, 0, 100)
 	var broke: bool = after >= 100 and before < 100
 	if broke:
 		extra_align -= 1
-		notes.append("%s has hit their breaking point — they'll be fragile for days." % alter.name)
+		notes.append("%s hit their breaking point — fragile for days." % alter.name)
 
-	GameState.last_outcome_penalty = extra_align       # negative drag, for the day-end note
-	var authored: int = int(_situation.get("nodes", {}).get(branch, {}).get("on_enter", {}).get("align", 0))
-	var total_align: int = authored + extra_align
 	if extra_align != 0:
 		GameState.add_alignment(extra_align)
+	GameState.last_outcome_penalty = extra_align
 	if alter:
 		alter_mgr.adjust_stress(assigned, stress_add)  # persists via GameState.alter_stress
+		_runner.override_speaker(branch, alter.name)   # tier branches are name-free; voice = who was sent
 
-	# Surface the concrete consequence so the choice is felt, not silent.
-	var headline: String = "%s — alignment %+d" % [alter.name if alter else "They", total_align]
+	# Surface what happened (the branch's authored align lands when it shows).
+	var tier_word: Dictionary = {"best": "Strong", "ok": "Okay", "strain": "Faltered"}
+	var headline: String = "%s — %s" % [alter.name if alter else "They", tier_word.get(result_tier, "Okay")]
 	if alter:
 		headline += "  ·  stress %d→%d%s" % [before, after, "  ⚠ BREAKING POINT" if broke else ""]
 	EventBus.objective_changed.emit("%s   %s" % [headline, " ".join(notes)])

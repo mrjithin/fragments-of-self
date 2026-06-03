@@ -1,0 +1,41 @@
+{
+	"start": "dr_1",
+	"task_id": "stand_ground",
+	"nodes": {
+		"dr_1": {
+			"speaker": "Narration",
+			"text": "An old acquaintance is at the door, pushing for a favour that's really too much — and not taking the first 'no' for an answer.",
+			"next": "dr_2"
+		},
+		"dr_2": {
+			"speaker": "Narration",
+			"text": "It needs someone who can hold a boundary without it tipping into a fight. Who answers?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"dr_strong": {
+			"speaker": "Narration",
+			"text": "Calm and clear. \"That's as far as I can go.\" The line holds, and the door closes gently, without rancour.",
+			"on_enter": {"align": 2},
+			"next": "dr_done"
+		},
+		"dr_ok": {
+			"speaker": "Narration",
+			"text": "Firm, if a little stiff. The point lands eventually, and the favour is declined.",
+			"on_enter": {"align": 1},
+			"next": "dr_done"
+		},
+		"dr_strain": {
+			"speaker": "Narration",
+			"text": "It tips into an argument — voices rise, nothing is settled, and it sits heavy long after the door shuts.",
+			"on_enter": {"align": 0},
+			"next": "dr_done"
+		},
+		"dr_done": {
+			"speaker": "Narration",
+			"text": "The hallway is quiet again, for whatever that's worth.",
+			"next": "END_TASK"
+		}
+	}
+}

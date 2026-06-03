@@ -30,6 +30,13 @@ func start(start_id: String) -> void:
 	_goto(start_id)
 
 
+## Override a node's speaker before it is shown — used when a coping roll reuses a
+## tier branch authored for a different alter (the voice is whoever was sent).
+func override_speaker(node_id: String, speaker: String) -> void:
+	if _nodes.has(node_id):
+		_nodes[node_id].speaker = speaker
+
+
 func _goto(node_id: String) -> void:
 	if not _nodes.has(node_id):
 		# Terminal sentinel (e.g. END_DAY, END_CONFLICT) — let the host decide.

@@ -9,19 +9,22 @@
 		},
 		{
 			"tasks": [
-				"res://data/external_situation_day2.json"
+				"res://data/external_situation_day2.json",
+				"res://data/bills_situation.json"
 			],
 			"setup": { "stress": { "june": 72 } }
 		},
 		{
 			"tasks": [
-				"res://data/external_situation_day3.json"
+				"res://data/external_situation_day3.json",
+				"res://data/child_situation.json"
 			],
 			"setup": { "stress": { "iris": 70 } }
 		},
 		{
 			"tasks": [
-				"res://data/external_situation_day4.json"
+				"res://data/external_situation_day4.json",
+				"res://data/door_situation.json"
 			],
 			"setup": { "strain": { "iris|rowan": 25 } }
 		}

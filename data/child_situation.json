@@ -1,0 +1,41 @@
+{
+	"start": "c_1",
+	"task_id": "calm_the_child",
+	"nodes": {
+		"c_1": {
+			"speaker": "Narration",
+			"text": "A neighbour's small kid is sobbing in the hallway, alone for a moment, overwhelmed by something too big for them.",
+			"next": "c_2"
+		},
+		"c_2": {
+			"speaker": "Narration",
+			"text": "It would take a gentle, patient presence — and the nerve not to flinch at the noise. Who kneels down?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"c_strong": {
+			"speaker": "Narration",
+			"text": "They kneel to the child's level, voice low and warm. The sobs ease to hiccups, then a small, shaky smile.",
+			"on_enter": {"align": 2},
+			"next": "c_done"
+		},
+		"c_ok": {
+			"speaker": "Narration",
+			"text": "A little awkward, but kind. It takes a while, and the child settles in the end.",
+			"on_enter": {"align": 1},
+			"next": "c_done"
+		},
+		"c_strain": {
+			"speaker": "Narration",
+			"text": "The crying winds them tighter and tighter; the child feels it and only cries harder. Someone else has to step in.",
+			"on_enter": {"align": 0},
+			"next": "c_done"
+		},
+		"c_done": {
+			"speaker": "Narration",
+			"text": "Eventually the hallway goes quiet again.",
+			"next": "END_TASK"
+		}
+	}
+}

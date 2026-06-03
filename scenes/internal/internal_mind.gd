@@ -154,7 +154,8 @@ func _update_cards() -> void:
 		var strained: Relationship = _rel_mgr.first_strained_for(id)
 		_cards[id].set_actions(strained != null, alter.is_stressed(), true)
 		_cards[id].refresh_stats(alter)
-		_cards[id].set_task_context(req_skill, trigger)
+		var band: Dictionary = Coping.band(alter, _task, _rel_mgr) if _task != null else {}
+		_cards[id].set_task_context(req_skill, trigger, band)
 
 
 # --- Conflict resolution ---
@@ -226,10 +227,6 @@ func _on_assign(alter_id: String) -> void:
 # --- Guidance ---
 
 func _update_objective() -> void:
-	var stressed: Alter = _alter_mgr.first_stressed()
-	if stressed != null:
-		EventBus.objective_changed.emit("%s is overwhelmed — Rest eases it (costs time), or Send them anyway and pay for it. Mind their triggers." % stressed.name)
-	elif _rel_mgr.has_any_strained():
-		EventBus.objective_changed.emit("A bond is strained (amber edge). Mend it with Talk for a better outcome — or Send anyway and take the hit.")
-	else:
-		EventBus.objective_changed.emit("Send whoever fits the task — play to their strengths and avoid what triggers them.")
+	# Non-prescriptive: name the levers, not the move. The odds on each card are a
+	# read, not a guarantee — and a part you haven't learned yet may still surprise you.
+	EventBus.objective_changed.emit("Weigh each part — their strengths, their state, the odds shown. Rest eases stress and Talk mends a bond (both cost time), but there's rarely a risk-free choice.")
