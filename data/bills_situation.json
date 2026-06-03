@@ -1,0 +1,41 @@
+{
+	"start": "b_1",
+	"task_id": "overdue_bills",
+	"nodes": {
+		"b_1": {
+			"speaker": "Narration",
+			"text": "A red-stamped envelope waits on the table. The bills are past due, and the bank closes at five.",
+			"next": "b_2"
+		},
+		"b_2": {
+			"speaker": "Narration",
+			"text": "It needs a clear head and a steady hand — but the ticking clock is its own kind of pressure. Who takes it on?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"b_strong": {
+			"speaker": "Narration",
+			"text": "The numbers line up, the calls get made, the page gets signed. Handled, cleanly, with time to spare.",
+			"on_enter": {"align": 2},
+			"next": "b_done"
+		},
+		"b_ok": {
+			"speaker": "Narration",
+			"text": "It mostly gets done — a couple of lines left for tomorrow, but the worst of it is paid.",
+			"on_enter": {"align": 1},
+			"next": "b_done"
+		},
+		"b_strain": {
+			"speaker": "Narration",
+			"text": "The figures blur and the dread rises. The envelope goes back in the drawer, only half-dealt-with.",
+			"on_enter": {"align": 0},
+			"next": "b_done"
+		},
+		"b_done": {
+			"speaker": "Narration",
+			"text": "Whatever got done, the day moves on.",
+			"next": "END_TASK"
+		}
+	}
+}

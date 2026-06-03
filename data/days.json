@@ -9,7 +9,8 @@
 		},
 		{
 			"tasks": [
-				"res://data/external_situation_day2.json"
+				"res://data/external_situation_day2.json",
+				"res://data/bills_situation.json"
 			],
 			"setup": { "stress": { "june": 72 } }
 		},

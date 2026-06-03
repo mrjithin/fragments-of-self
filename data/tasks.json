@@ -124,6 +124,19 @@
 				}
 			},
 			"default_branch": "d4_out_iris"
+		},
+		"overdue_bills": {
+			"title": "Bills past due",
+			"prompt": "Red stamps, a five o'clock deadline. Who keeps a clear head under the clock?",
+			"required_skill": "focus",
+			"trigger": "deadlines",
+			"time_cost": 25,
+			"outcomes": {
+				"rowan": {"tier": "best", "align": 2, "branch": "b_strong"},
+				"iris": {"tier": "ok", "align": 1, "branch": "b_ok"},
+				"june": {"tier": "strain", "align": 0, "branch": "b_strain"}
+			},
+			"default_branch": "b_ok"
 		}
 	}
 }
