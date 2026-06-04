@@ -33,6 +33,8 @@ func _ready() -> void:
 		GameState.day_tasks = _resolve_day_tasks(cfg)
 
 	# Roll the day's random event once (weighted, non-repeating, RNG-seeded).
+	# Flavor only — DID facts surface inside the situations themselves, not at
+	# day start, so each fact lands in context and is read exactly once.
 	if not GameState.has_flag("day_event_done"):
 		var pool := EventPool.new()
 		pool.load_data()
@@ -40,9 +42,6 @@ func _ready() -> void:
 		GameState.set_flag("day_event_done")
 		if ev != null:
 			GameState.current_event_text = ev.text
-			if ev.fact != "":
-				GameState.record_fact(ev.fact)
-				EventBus.did_fact_surfaced.emit(ev.fact)
 
 	_build_ui(GameState.day_tasks)
 
