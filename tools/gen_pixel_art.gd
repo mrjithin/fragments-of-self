@@ -22,6 +22,9 @@ func _ready() -> void:
 	_gen_external_bg()
 	_gen_internal_bg()
 	_gen_title_bg()
+	_gen_board_bg()
+	_gen_dayend_bg()
+	_gen_ending_bg()
 	_gen_leaves()
 	for id in ALTERS:
 		_gen_portrait(id, Color(ALTERS[id]["color"]), ALTERS[id]["mouth"])
@@ -167,6 +170,154 @@ func _gen_title_bg() -> void:
 		for y in range(hy, BG_H):
 			img.set_pixel(x, y, Color("#1c1422"))
 	_save(img, "bg_title.png")
+
+
+## Task board: a cozy interior hub — warm room, a window onto the autumn evening,
+## and a corkboard of pinned notes. Reads as "indoors, planning the day" — distinct
+## from the open-air External World it used to borrow.
+func _gen_board_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	# Warm room wall: soft amber, a touch darker toward the top.
+	var wall_top := Color("#4a3526")
+	var wall_bot := Color("#6e4d34")
+	for y in BG_H:
+		var t: float = float(y) / float(BG_H)
+		var row: Color = wall_top.lerp(wall_bot, pow(t, 0.7))
+		for x in BG_W:
+			img.set_pixel(x, y, row)
+	# Floor band along the bottom.
+	for y in range(150, BG_H):
+		for x in BG_W:
+			img.set_pixel(x, y, Color("#3a281c"))
+	# A window on the right looking out at dusk.
+	var wx0: int = 214
+	var wy0: int = 30
+	var ww: int = 78
+	var wh: int = 72
+	for y in range(wy0, wy0 + wh):
+		for x in range(wx0, wx0 + ww):
+			var t: float = float(y - wy0) / float(wh)
+			img.set_pixel(x, y, Color("#7a6a96").lerp(Color("#e0a276"), pow(t, 0.9)))
+	_glow(img, wx0 + 56, wy0 + 22, 16.0, Color("#ffe6b0"))   # low sun outside
+	# Window frame + mullions.
+	var frame := Color("#2c1d14")
+	for x in range(wx0 - 2, wx0 + ww + 2):
+		_px(img, x, wy0 - 2, frame); _px(img, x, wy0 - 1, frame)
+		_px(img, x, wy0 + wh, frame); _px(img, x, wy0 + wh + 1, frame)
+	for y in range(wy0 - 2, wy0 + wh + 2):
+		_px(img, wx0 - 2, y, frame); _px(img, wx0 - 1, y, frame)
+		_px(img, wx0 + ww, y, frame); _px(img, wx0 + ww + 1, y, frame)
+		_px(img, wx0 + ww / 2, y, frame)
+	for x in range(wx0, wx0 + ww):
+		_px(img, x, wy0 + wh / 2, frame)
+	# Corkboard on the left with a few pinned notes.
+	var bx0: int = 24
+	var by0: int = 40
+	var bw: int = 110
+	var bh: int = 78
+	for y in range(by0, by0 + bh):
+		for x in range(bx0, bx0 + bw):
+			img.set_pixel(x, y, Color("#9c6e3f"))
+	for x in range(bx0 - 2, bx0 + bw + 2):
+		_px(img, x, by0 - 2, frame); _px(img, x, by0 + bh + 1, frame)
+	for y in range(by0 - 2, by0 + bh + 2):
+		_px(img, bx0 - 2, y, frame); _px(img, bx0 + bw + 1, y, frame)
+	var notes := [
+		{"x": 34, "y": 50, "c": Color("#e8dcc0")},
+		{"x": 78, "y": 58, "c": Color("#d9c79e")},
+		{"x": 50, "y": 86, "c": Color("#ece3cd")},
+	]
+	for n in notes:
+		var nx: int = n["x"]
+		var ny: int = n["y"]
+		for y in range(ny, ny + 24):
+			for x in range(nx, nx + 30):
+				img.set_pixel(x, y, n["c"])
+		# scribbled lines + a pin
+		for li in [6, 12, 18]:
+			for x in range(nx + 4, nx + 26):
+				_blend(img, x, ny + li, Color("#5a4a36"), 0.55)
+		_disc(img, nx + 15, ny - 1, 2.0, Color("#b8482f"))
+	# A warm desk lamp glow in the lower-left corner.
+	_glow(img, 30, 150, 40.0, Color("#ffcf86"))
+	_save(img, "bg_board.png")
+
+
+## Day-end: dusk falling — low, resolving, a little darker per the design's "occasional
+## darker tones". Deep evening sky, first stars, dark hills, a small steady ember of warmth.
+func _gen_dayend_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	var top := Color("#1b1830")
+	var bot := Color("#6b4258")
+	for y in BG_H:
+		var t: float = float(y) / float(BG_H)
+		var row: Color = top.lerp(bot, pow(t, 1.3))
+		for x in BG_W:
+			img.set_pixel(x, y, row)
+	# Emerging stars (upper sky only).
+	var seed_val: int = 4242
+	for i in 55:
+		seed_val = (seed_val * 1103515245 + 12345) & 0x7fffffff
+		var x: int = seed_val % BG_W
+		seed_val = (seed_val * 1103515245 + 12345) & 0x7fffffff
+		var y: int = seed_val % 100
+		_blend(img, x, y, Color("#e9e3ff"), 0.35 + 0.45 * float(seed_val % 100) / 100.0)
+	# A faint band of last light at the horizon.
+	for y in range(108, 124):
+		for x in BG_W:
+			var t: float = 1.0 - float(y - 108) / 16.0
+			_blend(img, x, y, Color("#d68a5a"), 0.4 * t)
+	# Two layers of dark hills.
+	var layers := [
+		{"base": 122, "amp": 9.0, "freq": 0.02, "phase": 0.6, "color": Color("#241a2e")},
+		{"base": 140, "amp": 12.0, "freq": 0.028, "phase": 3.0, "color": Color("#16101c")},
+	]
+	for layer in layers:
+		for x in BG_W:
+			var hy: int = int(layer["base"] - layer["amp"] * sin(x * layer["freq"] + layer["phase"]))
+			for y in range(hy, BG_H):
+				img.set_pixel(x, y, layer["color"])
+	# A small ember of warmth on the front hill (a window light far off).
+	_glow(img, 96, 150, 9.0, Color("#ffb86a"))
+	_px(img, 96, 150, Color("#ffe1ad"))
+	_save(img, "bg_dayend.png")
+
+
+## Ending: dawn — the payoff. Hopeful sunrise, warm gold over the hills, soft rays.
+## Reads as resolution/new morning, clearly apart from the night title screen.
+func _gen_ending_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	var top := Color("#3a4a78")
+	var bot := Color("#f2c27a")
+	for y in BG_H:
+		var t: float = float(y) / float(BG_H)
+		var row: Color = top.lerp(bot, pow(t, 1.4))
+		for x in BG_W:
+			img.set_pixel(x, y, row)
+	# Rising sun low on the horizon, with a broad glow.
+	var sun := Vector2(160, 118)
+	_glow(img, int(sun.x), int(sun.y), 70.0, Color("#ffe6a8"))
+	_glow(img, int(sun.x), int(sun.y), 34.0, Color("#fff0c4"))
+	_disc(img, int(sun.x), int(sun.y), 20.0, Color("#fff6da"))
+	# Soft diagonal light rays fanning up from the sun.
+	for k in range(-4, 5):
+		var ang: float = float(k) * 0.16
+		for r in range(20, 150):
+			var x: int = int(sun.x + sin(ang) * r)
+			var y: int = int(sun.y - cos(ang) * r * 0.9)
+			_blend(img, x, y, Color("#fff2c8"), 0.06)
+	# Gentle hills catching the morning light (front darker).
+	var layers := [
+		{"base": 132, "amp": 8.0, "freq": 0.019, "phase": 1.2, "color": Color("#caa05e")},
+		{"base": 150, "amp": 11.0, "freq": 0.026, "phase": 3.7, "color": Color("#8f6a3c")},
+		{"base": 166, "amp": 9.0, "freq": 0.033, "phase": 5.5, "color": Color("#5e4528")},
+	]
+	for layer in layers:
+		for x in BG_W:
+			var hy: int = int(layer["base"] - layer["amp"] * sin(x * layer["freq"] + layer["phase"]))
+			for y in range(hy, BG_H):
+				img.set_pixel(x, y, layer["color"])
+	_save(img, "bg_ending.png")
 
 
 # --- leaves (particle sprites) ---

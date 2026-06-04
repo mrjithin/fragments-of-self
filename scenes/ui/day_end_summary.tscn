@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/day_end_summary.gd" id="1_end"]
-[ext_resource type="Texture2D" path="res://assets/art/bg_title.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/art/bg_dayend.png" id="2_bg"]
 [ext_resource type="FontFile" path="res://assets/fonts/Silkscreen.ttf" id="3_silk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]

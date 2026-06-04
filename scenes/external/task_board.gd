@@ -8,7 +8,7 @@ const DAYS_PATH: String = "res://data/days.json"
 const TASKS_PATH: String = "res://data/tasks.json"
 const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
 const DAY_END_SCENE: String = "res://scenes/ui/day_end_summary.tscn"
-const BG_TEXTURE: String = "res://assets/art/bg_external.png"
+const BG_TEXTURE: String = "res://assets/art/bg_board.png"
 
 const COL_TEXT := Color(0.93, 0.86, 0.74)
 const COL_DIM := Color(0.82, 0.76, 0.70, 0.7)

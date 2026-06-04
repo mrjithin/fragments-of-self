@@ -5,7 +5,7 @@ extends Control
 
 const MEMORIES_PATH: String = "res://data/memories.json"
 const TITLE_SCENE: String = "res://scenes/ui/title_screen.tscn"
-const BG_TEXTURE: String = "res://assets/art/bg_title.png"
+const BG_TEXTURE: String = "res://assets/art/bg_ending.png"
 
 const COL_TEXT := Color(0.93, 0.86, 0.74)
 const COL_DIM := Color(0.82, 0.76, 0.70, 0.75)
