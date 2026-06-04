@@ -14,6 +14,8 @@ const COL_GOOD := Color(0.6, 0.78, 0.6)
 
 
 func _ready() -> void:
+	# Catch any achievements earned only by the run's final state (e.g. alignment).
+	Achievements.evaluate()
 	_build()
 	# A finished run shouldn't offer "Continue" into a spent save.
 	SaveManager.delete_save()
