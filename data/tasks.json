@@ -176,6 +176,45 @@
 				"rowan": {"tier": "strain", "align": 0, "branch": "t_strain"}
 			},
 			"default_branch": "t_ok"
+		},
+		"grocery_run": {
+			"title": "The crowded shop",
+			"prompt": "Shelves to clear, a queue building, voices rising near the till. Who keeps their footing?",
+			"required_skill": "composure",
+			"trigger": "raised voices",
+			"time_cost": 25,
+			"outcomes": {
+				"iris": {"tier": "best", "align": 2, "branch": "gr_strong"},
+				"june": {"tier": "ok", "align": 1, "branch": "gr_ok"},
+				"rowan": {"tier": "strain", "align": 0, "branch": "gr_strain"}
+			},
+			"default_branch": "gr_ok"
+		},
+		"the_shift": {
+			"title": "A shift on the clock",
+			"prompt": "A backlog and a closing time that won't move. Who can lock in and get it done?",
+			"required_skill": "focus",
+			"trigger": "deadlines",
+			"time_cost": 30,
+			"outcomes": {
+				"rowan": {"tier": "best", "align": 2, "branch": "sh_strong"},
+				"iris": {"tier": "ok", "align": 1, "branch": "sh_ok"},
+				"june": {"tier": "strain", "align": 0, "branch": "sh_strain"}
+			},
+			"default_branch": "sh_ok"
+		},
+		"a_misunderstanding": {
+			"title": "Smoothing it over",
+			"prompt": "A friend feels let down, and the air's gone tense. Who can sit with the hurt and mend it?",
+			"required_skill": "empathy",
+			"trigger": "conflict",
+			"time_cost": 25,
+			"outcomes": {
+				"june": {"tier": "best", "align": 2, "branch": "mu_strong"},
+				"iris": {"tier": "ok", "align": 1, "branch": "mu_ok"},
+				"rowan": {"tier": "strain", "align": 0, "branch": "mu_strain"}
+			},
+			"default_branch": "mu_ok"
 		}
 	}
 }

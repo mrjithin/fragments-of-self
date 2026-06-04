@@ -1,0 +1,51 @@
+{
+	"background": "res://assets/art/bg_street.png",
+	"music": "res://assets/audio/amb_street.tres",
+	"start": "mu_1",
+	"task_id": "a_misunderstanding",
+	"nodes": {
+		"mu_1": {
+			"speaker": "Narration",
+			"text": "A friend waits on the corner, arms folded. Something said last week landed wrong, and the air between you has gone tense.",
+			"next": "mu_prep"
+		},
+		"mu_prep": {
+			"speaker": "Narration",
+			"text": "This can be met softly, or met head-on. How to approach?",
+			"choices": [
+				{"text": "Gently — let them feel heard before anything else.", "next": "mu_into", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "Directly — name it plainly and clear the air now.", "next": "mu_into", "consequence": {"set_flag": "prep_pushed"}}
+			]
+		},
+		"mu_into": {
+			"speaker": "Narration",
+			"text": "The hurt is real and close to the surface. Who can sit with it and mend the thread?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"mu_strong": {
+			"speaker": "June",
+			"text": "She listens first, really listens — and by the end the friend's shoulders have dropped and the warmth is back.",
+			"on_enter": {"surface_fact": "f_treatment", "align": 2},
+			"next": "mu_done"
+		},
+		"mu_ok": {
+			"speaker": "Iris",
+			"text": "Measured and fair. The air clears, even if it stays a touch formal.",
+			"on_enter": {"surface_fact": "f_treatment", "align": 1},
+			"next": "mu_done"
+		},
+		"mu_strain": {
+			"speaker": "Rowan",
+			"text": "He tries to fix it like a problem to solve — the friend nods, but something's still unsaid.",
+			"on_enter": {"surface_fact": "f_treatment", "align": 0},
+			"next": "mu_done"
+		},
+		"mu_done": {
+			"speaker": "Narration",
+			"text": "A half-hug at the corner. Not perfect, but a thread held.",
+			"next": "END_TASK"
+		}
+	}
+}
