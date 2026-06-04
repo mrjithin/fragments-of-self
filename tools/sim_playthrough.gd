@@ -166,13 +166,23 @@ func _ready() -> void:
 	_check("delete_save() removes the file", not SaveManager.has_save())
 
 	# --- #4 memory-reassembly mini-game (logic, headless) ---
-	# The puzzle: pieces surface scrambled; placing them in the TRUE order rebuilds it.
+	# Memories WITH an image use the jigsaw (covered by sim_jigsaw); the text-reassembly
+	# overlay handles only image-less memories, so it must defer here and run as a fallback.
 	var reveal: Control = load("res://scenes/ui/memory_reveal.tscn").instantiate()
 	add_child(reveal)
 	await get_tree().process_frame
-	EventBus.memory_unlocked.emit("m_treehouse")
+	EventBus.memory_unlocked.emit("m_treehouse")          # has an image -> jigsaw's job
 	await get_tree().process_frame
-	_check("mini-game splits the memory into ordered pieces", reveal._ordered.size() >= 2)
+	_check("text overlay defers an image-backed memory to the jigsaw", not reveal.visible)
+
+	# Fallback path: a memory with fragments but no image rebuilds via the text puzzle.
+	reveal._memories["m_text_only"] = {
+		"title": "A Plain Memory",
+		"fragments": ["First — a quiet room.", "Then a held breath.", "And at last, calm."],
+	}
+	EventBus.memory_unlocked.emit("m_text_only")
+	await get_tree().process_frame
+	_check("image-less memory splits into ordered pieces", reveal._ordered.size() >= 2)
 	_check("opening piece is pre-placed as a fixed anchor", reveal._placed == 1)
 	_check("only the remaining pieces surface scrambled",
 		reveal._pool.get_child_count() == reveal._ordered.size() - 1)
