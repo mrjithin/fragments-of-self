@@ -59,10 +59,16 @@ func _update_readout() -> void:
 		_fill.bg_color = LOW_FILL.lerp(CALM_FILL, ratio)
 
 
+## Show a brief guidance line, then fade it back out so it never lingers over the
+## graph. An empty string just clears it.
 func _on_objective_changed(text: String) -> void:
 	if _hint_tween and _hint_tween.is_running():
 		_hint_tween.kill()
 	_objective.text = text
 	_objective.modulate.a = 0.0
+	if text == "":
+		return
 	_hint_tween = create_tween()
 	_hint_tween.tween_property(_objective, "modulate:a", 1.0, 0.4)
+	_hint_tween.tween_interval(4.0)
+	_hint_tween.tween_property(_objective, "modulate:a", 0.0, 1.0)
