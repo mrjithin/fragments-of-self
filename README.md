@@ -72,6 +72,12 @@ Headless dev tools live in `tools/`: full-playthrough and per-system simulations
 godot --headless --path . res://tools/sim_playthrough.tscn
 ```
 
+An automated test suite (500+ checks across state, models, relationships, coping odds, persistence, dialogue effects, and content integrity) runs headless too:
+
+```sh
+godot --headless --path . res://tools/tests/test_runner.tscn
+```
+
 ## A note on the subject matter
 
 This game portrays DID authentically and respectfully, grounded in real-world information. It touches on trauma and difficult memories. If you or someone you know is struggling, please reach out to a mental-health professional — people with DID can and do live full, meaningful lives.

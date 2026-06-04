@@ -38,7 +38,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) "Status" section for what's built beyond 
 ## Running & testing
 
 - Open the project in the Godot 4.6 editor, or run headless: `godot --path . ` (and `godot --headless` for CI-style runs).
-- There is no automated test setup yet. If adding tests, prefer [GUT](https://github.com/bitwes/Gut) and document the run command here.
+- **Tests:** `godot --headless --path . res://tools/tests/test_runner.tscn` — a lightweight in-repo harness (no external addon). Suites live in `tools/tests/test_*.gd`, extend `TestCase`, and add `test_*` methods with `check`/`check_eq`/`check_near` asserts; the runner auto-discovers them and exits with the failure count. `before_each()` resets GameState/RNG/GameClock per test. Save-file tests must back up and restore `user://fragments_save.json` (see `test_persistence.gd`).
 - Commit `.godot/` is ignored (see `.gitignore`); never commit generated import caches beyond what git already tracks.
 
 ## Working agreements
