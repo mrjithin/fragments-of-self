@@ -20,7 +20,7 @@ func _ready() -> void:
 	GameState.record_memory("m_porch")
 	GameState.record_fact("f_switching")
 	GameState.discovered_triggers.append("deadlines")   # Rowan's, now learned
-	GameState.ending_alignment = 6                        # earns "Integration"
+	GameState.ending_alignment = 6                        # high, but Integration is end-of-run only
 	GameState.bonds_mended = 1                            # earns "Mediator"
 
 	var codex: Control = load("res://scenes/ui/codex.tscn").instantiate()
@@ -41,13 +41,15 @@ func _ready() -> void:
 	_check("a discovered trigger is shown", sys_text.contains("Known trigger: deadlines"))
 	_check("an undiscovered trigger stays hidden", sys_text.contains("not yet known"))
 
-	# Milestones tab reflects the mid-run Achievements.earned() (Integration and
-	# Mediator; Held Together stays locked until the run's final evaluation).
+	# Milestones tab reflects the mid-run Achievements.earned(): progress badges
+	# (Mediator) earn live; whole-run badges (Integration, Held Together) stay
+	# locked until the run's final evaluation, however high alignment sits now.
 	var mile: Control = codex._build_achievements()
 	var mile_text: String = _all_text(mile)
 	_check("Milestones tab lists every achievement", _count_entries(mile) >= 5)
-	_check("Milestones marks an earned badge (Integration ★)", mile_text.contains("★  Integration"))
+	_check("Milestones marks an earned badge (Mediator ★)", mile_text.contains("★  Mediator"))
 	_check("Milestones marks an unearned badge (Aware ☆)", mile_text.contains("☆  Aware"))
+	_check("Milestones locks 'Integration' mid-run", mile_text.contains("☆  Integration"))
 	_check("Milestones locks 'Held Together' mid-run", mile_text.contains("☆  Held Together"))
 
 	# Nothing discovered -> empty-state copy, not a crash.
