@@ -16,23 +16,39 @@ func _check(label: String, ok: bool) -> void:
 func _ready() -> void:
 	print("=== sim_content: every day's tasks load & resolve ===")
 	var tasks: Dictionary = JsonLoader.load_dict("res://data/tasks.json").get("tasks", {})
-	var days: Array = JsonLoader.load_dict("res://data/days.json").get("days", [])
+	var days_data: Dictionary = JsonLoader.load_dict("res://data/days.json")
+	var days: Array = days_data.get("days", [])
 	_check("days configured", days.size() >= 4)
 
+	# Every situation referenced anywhere: each day's authored tasks + the shared
+	# secondary pool the board draws from.
+	var all_paths: Array[String] = []
 	for di in days.size():
 		var paths: Array = (days[di] as Dictionary).get("tasks", [])
 		_check("day %d offers at least one task" % (di + 1), paths.size() >= 1)
 		for p in paths:
-			var sit: Dictionary = JsonLoader.load_dict(str(p))
-			var nodes: Dictionary = sit.get("nodes", {})
-			var tid: String = str(sit.get("task_id", ""))
-			_check("%s has a valid start node" % p, sit.has("start") and nodes.has(str(sit["start"])))
-			_check("%s -> task '%s' exists" % [p, tid], tasks.has(tid))
-			if tasks.has(tid):
-				var t := Task.from_dict(tid, tasks[tid])
-				for tier in ["best", "ok", "strain"]:
-					var br: String = t.branch_for_tier(tier)
-					_check("%s tier '%s' -> real branch node" % [tid, tier], br != "" and nodes.has(br))
+			if not all_paths.has(str(p)):
+				all_paths.append(str(p))
+	for p in days_data.get("secondary_pool", []):
+		if not all_paths.has(str(p)):
+			all_paths.append(str(p))
+
+	for p in all_paths:
+		var sit: Dictionary = JsonLoader.load_dict(p)
+		var nodes: Dictionary = sit.get("nodes", {})
+		var tid: String = str(sit.get("task_id", ""))
+		_check("%s has a valid start node" % p, sit.has("start") and nodes.has(str(sit["start"])))
+		_check("%s -> task '%s' exists" % [p, tid], tasks.has(tid))
+		# Per-situation art/audio should point at files that exist.
+		var bg: String = str(sit.get("background", ""))
+		_check("%s background exists" % p, bg == "" or ResourceLoader.exists(bg))
+		var mus: String = str(sit.get("music", ""))
+		_check("%s music exists" % p, mus == "" or ResourceLoader.exists(mus))
+		if tasks.has(tid):
+			var t := Task.from_dict(tid, tasks[tid])
+			for tier in ["best", "ok", "strain"]:
+				var br: String = t.branch_for_tier(tier)
+				_check("%s tier '%s' -> real branch node" % [tid, tier], br != "" and nodes.has(br))
 
 	print("=== sim_content done, failures: %d ===" % _fail)
 	get_tree().quit(_fail)

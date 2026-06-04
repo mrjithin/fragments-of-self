@@ -19,6 +19,9 @@ var last_outcome_penalty: int = 0      # alignment lost to a strained assigned a
 var current_situation: String = ""     # situation chosen from the task board
 var task_time_spent: int = 0           # reading time already charged for the current task (persists across the mind round-trip)
 var completed_tasks: Array[String] = [] # situation paths finished today
+var day_tasks: Array[String] = []      # the situations actually offered today (main + randomly-drawn secondaries); resolved once per day
+var used_secondaries: Array[String] = [] # secondary-pool situations already drawn this run (keeps days varied, non-repeating)
+var ever_broke: bool = false           # did any alter hit a breaking point this run (drives the "Held Together" achievement)
 var current_event_text: String = ""    # the day's rolled random event line (shown on board)
 
 # Live mutable system state. Centralised here (the documented single source of truth)
@@ -49,6 +52,9 @@ func reset_run() -> void:
 	task_time_spent = 0
 	current_event_text = ""
 	completed_tasks.clear()
+	day_tasks.clear()
+	used_secondaries.clear()
+	ever_broke = false
 	alter_stress.clear()
 	relationship_affinity.clear()
 	stress_before.clear()
@@ -80,6 +86,7 @@ func advance_day() -> void:
 	task_time_spent = 0
 	current_event_text = ""
 	completed_tasks.clear()
+	day_tasks.clear()
 	relationship_log.clear()
 	stress_before.clear()
 
@@ -130,6 +137,9 @@ func to_dict() -> Dictionary:
 		"current_situation": current_situation,
 		"current_event_text": current_event_text,
 		"completed_tasks": completed_tasks,
+		"day_tasks": day_tasks,
+		"used_secondaries": used_secondaries,
+		"ever_broke": ever_broke,
 		"alter_stress": alter_stress,
 		"relationship_affinity": relationship_affinity,
 		"stress_before": stress_before,
@@ -154,9 +164,19 @@ func from_dict(d: Dictionary) -> void:
 	current_situation = str(d.get("current_situation", ""))
 	current_event_text = str(d.get("current_event_text", ""))
 
+	ever_broke = bool(d.get("ever_broke", false))
+
 	completed_tasks.clear()
 	for p in d.get("completed_tasks", []):
 		completed_tasks.append(str(p))
+
+	day_tasks.clear()
+	for p in d.get("day_tasks", []):
+		day_tasks.append(str(p))
+
+	used_secondaries.clear()
+	for p in d.get("used_secondaries", []):
+		used_secondaries.append(str(p))
 
 	flags.clear()
 	for k in d.get("flags", {}):

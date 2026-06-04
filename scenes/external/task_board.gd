@@ -26,6 +26,12 @@ func _ready() -> void:
 		_apply_day_setup(cfg.get("setup", {}))
 		GameState.set_flag("day_setup_done")
 
+	# Resolve the day's offered tasks once: the fixed main situation plus any
+	# randomly-drawn secondaries. Cached in GameState so returning to the board
+	# (or resuming a save) shows the same list, and completed-task paths still match.
+	if GameState.day_tasks.is_empty():
+		GameState.day_tasks = _resolve_day_tasks(cfg)
+
 	# Roll the day's random event once (weighted, non-repeating, RNG-seeded).
 	if not GameState.has_flag("day_event_done"):
 		var pool := EventPool.new()
@@ -38,10 +44,45 @@ func _ready() -> void:
 				GameState.record_fact(ev.fact)
 				EventBus.did_fact_surfaced.emit(ev.fact)
 
-	_build_ui(cfg.get("tasks", []))
+	_build_ui(GameState.day_tasks)
 
 	GameState.current_scene = scene_file_path
 	SaveManager.save()
+
+
+## The day's task list: the fixed main situation (tasks[0]) plus `secondary_count`
+## life-tasks drawn from the shared pool — seeded (reproducible) and non-repeating
+## across the run so each day feels different. Falls back to the authored `tasks`
+## when no count/pool is configured (e.g. the finale day).
+func _resolve_day_tasks(cfg: Dictionary) -> Array[String]:
+	var fixed: Array = cfg.get("tasks", [])
+	var count: int = int(cfg.get("secondary_count", 0))
+	var pool: Array = JsonLoader.load_dict(DAYS_PATH).get("secondary_pool", [])
+	if count <= 0 or pool.is_empty() or fixed.is_empty():
+		var as_is: Array[String] = []
+		for p in fixed:
+			as_is.append(str(p))
+		return as_is
+
+	var out: Array[String] = [str(fixed[0])]   # keep the main, story-bearing situation
+	var avail: Array[String] = []
+	for p in pool:
+		if not GameState.used_secondaries.has(str(p)):
+			avail.append(str(p))
+	if avail.size() < count:                    # pool exhausted — allow reuse this run
+		avail.clear()
+		for p in pool:
+			avail.append(str(p))
+	for _i in count:
+		if avail.is_empty():
+			break
+		var idx: int = RNG.randi_range_inclusive(0, avail.size() - 1)
+		var pick: String = avail[idx]
+		avail.remove_at(idx)
+		out.append(pick)
+		if not GameState.used_secondaries.has(pick):
+			GameState.used_secondaries.append(pick)
+	return out
 
 
 # --- Day data ---
