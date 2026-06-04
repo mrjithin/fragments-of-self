@@ -84,6 +84,7 @@ func adjust(a: String, b: String, delta: int) -> void:
 	EventBus.relationship_changed.emit(r.from_id, r.to_id, r.affinity)
 	if old_status != "healthy" and r.status == "healthy":
 		EventBus.conflict_resolved.emit(r.from_id, r.to_id, r.affinity)
+		GameState.bonds_mended += 1
 		GameState.relationship_log.append({
 			"pair": "%s & %s" % [r.from_id, r.to_id],
 			"from_status": old_status,

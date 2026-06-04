@@ -36,7 +36,9 @@ static func _is_earned(id: String, final: bool) -> bool:
 		"aware":
 			return GameState.surfaced_facts.size() >= _total_facts()
 		"mediator":
-			return GameState.relationship_log.size() > 0
+			# relationship_log is per-day (cleared by advance_day for the summary);
+			# the run-wide counter keeps the badge once it's earned.
+			return GameState.bonds_mended > 0
 	return false
 
 

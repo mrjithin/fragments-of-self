@@ -22,6 +22,7 @@ var completed_tasks: Array[String] = [] # situation paths finished today
 var day_tasks: Array[String] = []      # the situations actually offered today (main + randomly-drawn secondaries); resolved once per day
 var used_secondaries: Array[String] = [] # secondary-pool situations already drawn this run (keeps days varied, non-repeating)
 var ever_broke: bool = false           # did any alter hit a breaking point this run (drives the "Held Together" achievement)
+var bonds_mended: int = 0              # bonds brought back to healthy across the whole run (drives the "Mediator" achievement; relationship_log is per-day)
 var current_event_text: String = ""    # the day's rolled random event line (shown on board)
 
 # Live mutable system state. Centralised here (the documented single source of truth)
@@ -54,6 +55,7 @@ func reset_run() -> void:
 	day_tasks.clear()
 	used_secondaries.clear()
 	ever_broke = false
+	bonds_mended = 0
 	alter_stress.clear()
 	relationship_affinity.clear()
 	stress_before.clear()
@@ -138,6 +140,7 @@ func to_dict() -> Dictionary:
 		"day_tasks": day_tasks,
 		"used_secondaries": used_secondaries,
 		"ever_broke": ever_broke,
+		"bonds_mended": bonds_mended,
 		"alter_stress": alter_stress,
 		"relationship_affinity": relationship_affinity,
 		"stress_before": stress_before,
@@ -162,6 +165,7 @@ func from_dict(d: Dictionary) -> void:
 	current_event_text = str(d.get("current_event_text", ""))
 
 	ever_broke = bool(d.get("ever_broke", false))
+	bonds_mended = int(d.get("bonds_mended", 0))
 
 	completed_tasks.clear()
 	for p in d.get("completed_tasks", []):
