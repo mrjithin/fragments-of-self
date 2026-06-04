@@ -57,6 +57,7 @@ func _build() -> void:
 	_add_tab(tabs, "Memories", _build_memories())
 	_add_tab(tabs, "DID Facts", _build_facts())
 	_add_tab(tabs, "The System", _build_system())
+	_add_tab(tabs, "Milestones", _build_achievements())
 
 	var back := Button.new()
 	back.text = "◀ Back"
@@ -128,6 +129,26 @@ func _build_system() -> Control:
 		elif not trigs.is_empty():
 			line += "\nTrigger: not yet known"
 		box.add_child(_entry("%s  —  %s" % [str(alter.get("name", "?")), str(alter.get("role", ""))], line))
+	return box
+
+
+# --- Helpers ---
+
+# --- Tab: Milestones (achievements) ---
+
+func _build_achievements() -> Control:
+	var box := _section()
+	var defs: Array = Achievements.all_defs()
+	var earned: Array = GameState.unlocked_achievements
+	box.add_child(_label("Earned  %d / %d" % [earned.size(), defs.size()], 15, COL_ACCENT))
+	for d in defs:
+		var def: Dictionary = d as Dictionary
+		var got: bool = earned.has(str(def.get("id", "")))
+		var heading: String = "%s  %s" % ["★" if got else "☆", str(def.get("title", ""))]
+		var entry := _entry(heading, str(def.get("desc", "")))
+		if not got:
+			entry.modulate = COL_LOCKED   # locked ones read dimmed
+		box.add_child(entry)
 	return box
 
 
