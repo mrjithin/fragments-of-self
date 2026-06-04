@@ -41,14 +41,14 @@ func _ready() -> void:
 	_check("a discovered trigger is shown", sys_text.contains("Known trigger: deadlines"))
 	_check("an undiscovered trigger stays hidden", sys_text.contains("not yet known"))
 
-	# Milestones tab reflects the merged Achievements.earned() (Integration and
-	# Mediator; Held Together stays locked until at least one day is survived).
+	# Milestones tab reflects the mid-run Achievements.earned() (Integration and
+	# Mediator; Held Together stays locked until the run's final evaluation).
 	var mile: Control = codex._build_achievements()
 	var mile_text: String = _all_text(mile)
 	_check("Milestones tab lists every achievement", _count_entries(mile) >= 5)
 	_check("Milestones marks an earned badge (Integration ★)", mile_text.contains("★  Integration"))
 	_check("Milestones marks an unearned badge (Aware ☆)", mile_text.contains("☆  Aware"))
-	_check("Milestones locks 'Held Together' on a fresh day 1", mile_text.contains("☆  Held Together"))
+	_check("Milestones locks 'Held Together' mid-run", mile_text.contains("☆  Held Together"))
 
 	# Nothing discovered -> empty-state copy, not a crash.
 	GameState.reset_run()

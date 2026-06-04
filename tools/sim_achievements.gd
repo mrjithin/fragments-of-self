@@ -15,9 +15,10 @@ func _check(label: String, condition: bool) -> void:
 
 
 ## The set of earned achievement titles for the current GameState.
-func _earned_titles() -> Dictionary:
+## `final` mirrors the ending screen's end-of-run evaluation.
+func _earned_titles(final: bool = false) -> Dictionary:
 	var out: Dictionary = {}
-	for e in Achievements.earned():
+	for e in Achievements.earned(final):
 		out[str((e as Dictionary).get("title", ""))] = true
 	return out
 
@@ -25,15 +26,16 @@ func _earned_titles() -> Dictionary:
 func _ready() -> void:
 	GameState.reset_run()
 
-	# Fresh run: nothing is earned yet — "Held Together" needs at least one
-	# survived day, so a brand-new game shows zero badges.
+	# Fresh run: nothing is earned yet — "Held Together" is an end-of-run badge,
+	# so a brand-new game shows zero badges.
 	var t: Dictionary = _earned_titles()
 	_check("a fresh run has not earned 'Held Together'", not t.has("Held Together"))
 	_check("nothing earned on a fresh run", t.is_empty())
 
-	# Surviving a day without a breaking point earns 'Held Together'.
+	# Mid-run (day 2+) it stays locked; only the final evaluation can earn it.
 	GameState.advance_day()
-	_check("a survived day earns 'Held Together'", _earned_titles().has("Held Together"))
+	_check("mid-run, 'Held Together' stays locked", not _earned_titles().has("Held Together"))
+	_check("a clean finished run earns 'Held Together'", _earned_titles(true).has("Held Together"))
 
 	# Integration: high final alignment.
 	GameState.ending_alignment = 6
@@ -53,12 +55,12 @@ func _ready() -> void:
 	GameState.relationship_log.append({"pair": "iris|rowan", "from_status": "strained", "to_status": "healthy"})
 	_check("mending a bond earns 'Mediator'", _earned_titles().has("Mediator"))
 
-	# A breaking point this run revokes 'Held Together'.
+	# A breaking point this run revokes 'Held Together' even at the end.
 	GameState.ever_broke = true
-	_check("a breaking point loses 'Held Together'", not _earned_titles().has("Held Together"))
+	_check("a breaking point loses 'Held Together'", not _earned_titles(true).has("Held Together"))
 
 	# With everything met (minus Held Together), the other four are all earned.
-	_check("all four progress badges earned", _earned_titles().size() == 4)
+	_check("all four progress badges earned", _earned_titles(true).size() == 4)
 
 	GameState.reset_run()
 	_check("reset clears all badges (fresh run earns nothing)",
