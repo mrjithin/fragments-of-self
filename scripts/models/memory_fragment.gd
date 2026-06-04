@@ -5,6 +5,7 @@ extends RefCounted
 var id: String = ""
 var title: String = ""
 var text: String = ""
+var fragments: Array[String] = []   # the memory in ordered pieces, for the reassembly mini-game
 var mystery_tag: String = ""
 
 
@@ -13,5 +14,7 @@ static func from_dict(mem_id: String, d: Dictionary) -> MemoryFragment:
 	m.id = mem_id
 	m.title = d.get("title", "")
 	m.text = d.get("text", "")
+	for f in d.get("fragments", []):
+		m.fragments.append(str(f))
 	m.mystery_tag = d.get("mystery_tag", "")
 	return m
