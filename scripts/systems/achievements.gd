@@ -10,25 +10,27 @@ const CORE_MEMORIES: int = 4   # the run's mystery memories (treehouse, porch, k
 
 
 ## All earned achievements as [{title, desc}], in the data file's order.
-static func earned() -> Array[Dictionary]:
+## `final` marks an end-of-run evaluation (the ending screen): negative
+## conditions like "no alter ever broke" only count once the run is over,
+## so the mid-run Journal can't show them as earned in advance.
+static func earned(final: bool = false) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var list: Array = JsonLoader.load_dict(DATA_PATH).get("achievements", [])
 	for a in list:
 		var entry: Dictionary = a as Dictionary
-		if _is_earned(str(entry.get("id", ""))):
+		if _is_earned(str(entry.get("id", "")), final):
 			out.append({"title": str(entry.get("title", "")), "desc": str(entry.get("desc", ""))})
 	return out
 
 
-static func _is_earned(id: String) -> bool:
+static func _is_earned(id: String, final: bool) -> bool:
 	match id:
 		"integration":
 			var ratio: float = float(GameState.ending_alignment) / float(maxi(1, GameState.ALIGNMENT_MAX))
 			return ratio >= 0.6
 		"held_together":
-			# Needs at least one full day survived — otherwise a fresh run would
-			# trivially satisfy "no alter ever broke" before anything happened.
-			return GameState.day > 1 and not GameState.ever_broke
+			# "Made it through the run" — only judgeable once the run is done.
+			return final and not GameState.ever_broke
 		"whole_picture":
 			return GameState.unlocked_memories.size() >= CORE_MEMORIES
 		"aware":

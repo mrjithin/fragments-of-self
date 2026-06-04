@@ -102,7 +102,7 @@ func _compose(path: String) -> String:
 		COL_DIM.to_html(), found.size(), all_mem.size(), GameState.ending_alignment, GameState.ALIGNMENT_MAX])
 
 	# Earned badges — a small reward summary that also nudges replay for the misses.
-	var badges: Array[Dictionary] = Achievements.earned()
+	var badges: Array[Dictionary] = Achievements.earned(true)
 	if not badges.is_empty():
 		lines.append("")
 		lines.append("[color=%s]Achievements earned:[/color]" % COL_ACCENT.to_html())
