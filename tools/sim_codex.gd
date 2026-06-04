@@ -21,7 +21,7 @@ func _ready() -> void:
 	GameState.record_fact("f_switching")
 	GameState.discovered_triggers.append("deadlines")   # Rowan's, now learned
 	GameState.ending_alignment = 6                        # earns "Integration"
-	GameState.relationship_log.append({"pair": "iris|rowan"})  # earns "Mediator"
+	GameState.bonds_mended = 1                            # earns "Mediator"
 
 	var codex: Control = load("res://scenes/ui/codex.tscn").instantiate()
 	add_child(codex)

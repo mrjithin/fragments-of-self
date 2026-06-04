@@ -53,13 +53,11 @@ func _ready() -> void:
 			day3_ids.append(e3.id)
 	_check("day 3 can roll the calendar-date event", day3_ids.has("ev_calendar_date"))
 
-	# Surfacing a fact records it for the info loop.
+	# Events are flavor only — rolling one never surfaces a DID fact.
 	GameState.reset_run()
 	RNG.set_seed(RNG.DEFAULT_SEED)
 	var ev: GameEvent = pool.roll(1)
-	if ev != null and ev.fact != "":
-		GameState.record_fact(ev.fact)
-	_check("event fact recorded", GameState.surfaced_facts.size() == 1)
+	_check("rolling an event surfaces no fact", ev != null and GameState.surfaced_facts.is_empty())
 
 	print("=== sim_events done, failures: %d ===" % _fail)
 	get_tree().quit()

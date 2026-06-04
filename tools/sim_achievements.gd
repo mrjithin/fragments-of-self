@@ -51,9 +51,12 @@ func _ready() -> void:
 		GameState.record_fact(f)
 	_check("every fact earns 'Aware'", _earned_titles().has("Aware"))
 
-	# Mediator: a bond mended (a relationship_log entry).
-	GameState.relationship_log.append({"pair": "iris|rowan", "from_status": "strained", "to_status": "healthy"})
+	# Mediator: a bond mended anywhere in the run (run-wide counter, not the
+	# per-day relationship_log, so the badge survives advance_day).
+	GameState.bonds_mended += 1
 	_check("mending a bond earns 'Mediator'", _earned_titles().has("Mediator"))
+	GameState.advance_day()
+	_check("'Mediator' stays earned the next day", _earned_titles().has("Mediator"))
 
 	# A breaking point this run revokes 'Held Together' even at the end.
 	GameState.ever_broke = true
