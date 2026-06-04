@@ -3,26 +3,52 @@
 		"m_treehouse": {
 			"title": "The Treehouse",
 			"text": "A small wooden door. A blanket fort lit by a flashlight. A voice, gentle, promising that no matter what happened downstairs, in here they would always be safe.",
+			"fragments": [
+				"First — a small wooden door, pulled shut against the noise below.",
+				"Then the whole world shrank to a blanket fort, lit by one wavering flashlight.",
+				"And last, a voice — gentle, certain — promising that whatever happened downstairs, in here they would always be safe."
+			],
 			"mystery_tag": "origin"
 		},
 		"m_porch": {
 			"title": "The Porch",
 			"text": "Two kids on a cold porch step, sharing one coat. 'I've got you,' the older one whispered. Someone learned, very early, how to be the safe place for someone else.",
+			"fragments": [
+				"First — two kids on a cold porch step, one coat shared between them.",
+				"Then the older one pulled it tighter and whispered, 'I've got you.'",
+				"And from that night on, someone had learned — far too early — how to be the safe place for someone else."
+			],
 			"mystery_tag": "origin"
 		},
 		"m_kitchen": {
 			"title": "The Kitchen Doorway",
 			"text": "A child in a doorway, learning the rhythm of the house — when it was safe to speak, when it was safer to go quiet and small. The first time someone steady stepped forward so the child wouldn't have to.",
+			"fragments": [
+				"First — a child in a doorway, reading the rhythm of the house.",
+				"Then learning its rules: when it was safe to speak, and when it was safer to go quiet and small.",
+				"And the first time someone steadier stepped forward, so the child wouldn't have to."
+			],
 			"mystery_tag": "origin"
 		},
 		"m_first_words": {
 			"title": "The First 'We'",
 			"text": "A page of a childhood journal, the handwriting changing halfway down. 'We' instead of 'I' — not a mistake, but a truce. The moment the inside ones agreed, quietly, to keep each other safe.",
+			"fragments": [
+				"First — a page of a childhood journal, the handwriting changing halfway down.",
+				"Then a single word: 'we' in place of 'I' — not a slip, but a truce.",
+				"And in that moment the inside ones agreed, quietly, to keep one another safe."
+			],
 			"mystery_tag": "origin"
 		},
 		"m_whole": {
 			"title": "The Whole of It",
 			"text": "It comes together at last: the treehouse, the porch, the doorway, the first 'we'. Not one story but many, held by many — each part born to carry what one child couldn't carry alone. Not broken. Survived. Together.",
+			"fragments": [
+				"First — the pieces drift back together: the treehouse, the porch, the doorway, the first 'we'.",
+				"Then they settle into one shape — not a single story, but many, held by many.",
+				"And each part, it turns out, was born to carry what one child could not carry alone.",
+				"So: not broken. Survived. Together."
+			],
 			"mystery_tag": "origin"
 		}
 	}

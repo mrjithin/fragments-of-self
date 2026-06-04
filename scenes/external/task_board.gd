@@ -8,6 +8,7 @@ const DAYS_PATH: String = "res://data/days.json"
 const TASKS_PATH: String = "res://data/tasks.json"
 const EXTERNAL_SCENE: String = "res://scenes/external/external_world.tscn"
 const DAY_END_SCENE: String = "res://scenes/ui/day_end_summary.tscn"
+const CODEX_SCENE: String = "res://scenes/ui/codex.tscn"
 const BG_TEXTURE: String = "res://assets/art/bg_board.png"
 
 const COL_TEXT := Color(0.93, 0.86, 0.74)
@@ -149,11 +150,23 @@ func _build_ui(task_paths: Array) -> void:
 	for p in task_paths:
 		_list.add_child(_make_task_card(str(p)))
 
+	var actions := HBoxContainer.new()
+	actions.add_theme_constant_override("separation", 10)
+	col.add_child(actions)
+
+	var journal_btn := Button.new()
+	journal_btn.text = "📖 Journal"
+	journal_btn.custom_minimum_size = Vector2(0, 44)
+	journal_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	journal_btn.pressed.connect(_on_journal)
+	actions.add_child(journal_btn)
+
 	var end_btn := Button.new()
 	end_btn.text = "End the day  ▶"
 	end_btn.custom_minimum_size = Vector2(0, 44)
+	end_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	end_btn.pressed.connect(_on_end_day)
-	col.add_child(end_btn)
+	actions.add_child(end_btn)
 
 
 func _make_task_card(situation_path: String) -> Control:
@@ -195,6 +208,11 @@ func _refresh_time() -> void:
 func _on_pick(situation_path: String) -> void:
 	GameState.current_situation = situation_path
 	SceneFlow.change_scene_to_file(EXTERNAL_SCENE)
+
+
+func _on_journal() -> void:
+	# The hub is already the saved resume point, so the Codex can return straight here.
+	SceneFlow.change_scene_to_file(CODEX_SCENE)
 
 
 func _on_end_day() -> void:

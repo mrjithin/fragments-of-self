@@ -33,6 +33,9 @@ func _ready() -> void:
 	await get_tree().process_frame
 	_check("autosave anchors resume to the task board (not mid-situation)",
 		GameState.current_scene == BOARD)
+	# The task drains its reading-time budget as the situation is read, so capture the
+	# real saved value rather than assuming a fixed number — the resume must round-trip it.
+	var saved_budget: int = GameClock.budget_remaining
 	ext.queue_free()
 	await get_tree().process_frame
 

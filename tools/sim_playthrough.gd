@@ -16,6 +16,14 @@ func _check(label: String, condition: bool) -> void:
 		_failures += 1
 
 
+## A throwaway piece button to feed the reassembly mini-game headlessly. The puzzle
+## keys off the ordered index, not which node is clicked, so a fresh button is enough.
+func _piece_for(reveal: Control, ord_i: int) -> Button:
+	var b := Button.new()
+	reveal._pool.add_child(b)
+	return b
+
+
 func _ready() -> void:
 	GameState.reset_run()
 	GameClock.reset_day()
@@ -157,18 +165,32 @@ func _ready() -> void:
 	SaveManager.delete_save()
 	_check("delete_save() removes the file", not SaveManager.has_save())
 
-	# --- #4 memory-assembly mini-game (logic, headless) ---
+	# --- #4 memory-reassembly mini-game (logic, headless) ---
+	# The puzzle: pieces surface scrambled; placing them in the TRUE order rebuilds it.
 	var reveal: Control = load("res://scenes/ui/memory_reveal.tscn").instantiate()
 	add_child(reveal)
 	await get_tree().process_frame
 	EventBus.memory_unlocked.emit("m_treehouse")
 	await get_tree().process_frame
-	var shards: Array = reveal._shards.get_children()
-	_check("mini-game builds a shard per fragment", shards.size() >= 2)
-	_check("continue gated until assembled", reveal._continue.disabled)
-	for b in shards:
-		reveal._on_shard(b)
-	_check("continue opens once all shards gathered", not reveal._continue.disabled)
+	_check("mini-game splits the memory into ordered pieces", reveal._ordered.size() >= 2)
+	_check("opening piece is pre-placed as a fixed anchor", reveal._placed == 1)
+	_check("only the remaining pieces surface scrambled",
+		reveal._pool.get_child_count() == reveal._ordered.size() - 1)
+	_check("continue gated until reassembled", reveal._continue.disabled)
+
+	# A wrong piece (not the next-in-order) is refused, no progress made.
+	var wrong_idx: int = reveal._ordered.size() - 1   # the final piece can't come next
+	if wrong_idx > reveal._placed:
+		reveal._on_piece(_piece_for(reveal, wrong_idx), wrong_idx)
+		_check("wrong piece doesn't advance the rebuild", reveal._placed == 1)
+
+	# Place every remaining piece in correct order -> the memory becomes whole.
+	while reveal._placed < reveal._ordered.size():
+		var i: int = reveal._placed
+		reveal._on_piece(_piece_for(reveal, i), i)
+	_check("reassembling in order rebuilds the whole memory",
+		reveal._placed == reveal._ordered.size())
+	_check("continue opens once the memory is whole", not reveal._continue.disabled)
 	reveal.queue_free()
 
 	print("=== sim complete, failures: ", _failures, " ===")
