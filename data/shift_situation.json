@@ -1,0 +1,51 @@
+{
+	"background": "res://assets/art/bg_work.png",
+	"music": "res://assets/audio/amb_work.tres",
+	"start": "sh_1",
+	"task_id": "the_shift",
+	"nodes": {
+		"sh_1": {
+			"speaker": "Narration",
+			"text": "A backlog stacked by the register and a closing time that won't budge. The clock on the wall is loud today.",
+			"next": "sh_prep"
+		},
+		"sh_prep": {
+			"speaker": "Narration",
+			"text": "There's a way to do this without burning out — or a way to just sprint it. Which?",
+			"choices": [
+				{"text": "Pace the work — steady hands beat frantic ones.", "next": "sh_into", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "Sprint it — clear the lot before close, whatever it takes.", "next": "sh_into", "consequence": {"set_flag": "prep_pushed"}}
+			]
+		},
+		"sh_into": {
+			"speaker": "Narration",
+			"text": "The deadline presses in from every side. Who can lock in and carry the shift?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"sh_strong": {
+			"speaker": "Rowan",
+			"text": "He drops into the work like a gear clicking home — task after task, the backlog melting away with time to spare.",
+			"on_enter": {"surface_fact": "f_coconscious", "align": 2},
+			"next": "sh_done"
+		},
+		"sh_ok": {
+			"speaker": "Iris",
+			"text": "Calm and even, she keeps it moving. Not fast, but nothing slips.",
+			"on_enter": {"surface_fact": "f_coconscious", "align": 1},
+			"next": "sh_done"
+		},
+		"sh_strain": {
+			"speaker": "June",
+			"text": "She means well, but the ticking clock isn't kind to her — it's a scramble to the finish.",
+			"on_enter": {"surface_fact": "f_coconscious", "align": 0},
+			"next": "sh_done"
+		},
+		"sh_done": {
+			"speaker": "Narration",
+			"text": "The shutters come down. The counter's clear. Made it.",
+			"next": "END_TASK"
+		}
+	}
+}

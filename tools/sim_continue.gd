@@ -51,8 +51,10 @@ func _ready() -> void:
 		target = BOARD
 	_check("resume target is the task board", target == BOARD)
 	_check("alignment restored (2)", GameState.ending_alignment == 2)
-	_check("time budget restored (60, was the bug: reset to 100)",
-		GameClock.budget_remaining == 60)
+	# Spent 40 entering, then the first narration beat drains READ_STEP (4) on _ready
+	# before the autosave — so the restored budget is 56, not a reset-to-100.
+	_check("time budget restored (56, was the bug: reset to 100)",
+		GameClock.budget_remaining == 56)
 
 	# --- Phase 4: instantiate the resumed scene to catch _ready errors ---
 	var inst: Node = load(target).instantiate()

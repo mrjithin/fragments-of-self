@@ -1,17 +1,28 @@
 {
-	"_comment": "The run's days, in order. Each day offers a list of task situations shown on the board; optional 'setup' seeds that day's starting pressures (absolute alter stress / relationship affinity).",
+	"_comment": "The run's days, in order. Each day's board shows its fixed main situation (tasks[0]) plus 'secondary_count' life-tasks drawn at random (seeded, non-repeating across the run) from 'secondary_pool'. The 'tasks' array still lists an authored default pair so older tools keep working; the board resolves the live list into GameState.day_tasks. Optional 'setup' seeds that day's starting pressures (absolute alter stress / relationship affinity).",
+	"secondary_pool": [
+		"res://data/errand_situation.json",
+		"res://data/bills_situation.json",
+		"res://data/child_situation.json",
+		"res://data/door_situation.json",
+		"res://data/grocery_situation.json",
+		"res://data/shift_situation.json",
+		"res://data/misunderstanding_situation.json"
+	],
 	"days": [
 		{
 			"tasks": [
 				"res://data/external_situation.json",
 				"res://data/errand_situation.json"
-			]
+			],
+			"secondary_count": 1
 		},
 		{
 			"tasks": [
 				"res://data/external_situation_day2.json",
 				"res://data/bills_situation.json"
 			],
+			"secondary_count": 1,
 			"setup": { "stress": { "june": 72 } }
 		},
 		{
@@ -19,6 +30,7 @@
 				"res://data/external_situation_day3.json",
 				"res://data/child_situation.json"
 			],
+			"secondary_count": 1,
 			"setup": { "stress": { "iris": 70 } }
 		},
 		{
@@ -26,6 +38,7 @@
 				"res://data/external_situation_day4.json",
 				"res://data/door_situation.json"
 			],
+			"secondary_count": 1,
 			"setup": { "strain": { "iris|rowan": 25 } }
 		},
 		{

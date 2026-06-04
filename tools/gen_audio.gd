@@ -29,6 +29,9 @@ const TRACKS := {
 	"amb_nightcall":  [110.00, 164.81, 207.65, 246.94],   # A min, deep  — quiet dread/longing
 	"amb_waiting":    [174.61, 261.63, 349.23, 440.00],   # F maj, airy  — sterile calm
 	"amb_therapy":    [196.00, 293.66, 349.23, 440.00],   # G maj7-ish   — warm, safe
+	"amb_store":      [233.08, 311.13, 349.23, 466.16],   # Bb-ish, busy — bright, restless
+	"amb_work":       [155.56, 233.08, 311.13, 392.00],   # Eb maj, mid  — steady, on-task
+	"amb_street":     [185.00, 277.18, 369.99, 440.00],   # F#m-ish      — open-air, in-between
 }
 
 

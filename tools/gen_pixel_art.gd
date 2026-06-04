@@ -362,6 +362,9 @@ func _gen_situation_bgs() -> void:
 	_gen_nightcall_bg()
 	_gen_waiting_bg()
 	_gen_therapy_bg()
+	_gen_store_bg()
+	_gen_work_bg()
+	_gen_street_bg()
 
 
 ## job_interview — a kitchen at morning, an opened letter on the table.
@@ -549,6 +552,86 @@ func _gen_therapy_bg() -> void:
 	_rect(img, 156, 120, 10, 16, Color("#5a3a2c"))
 	_disc(img, 161, 112, 9.0, Color("#6aa05c"))
 	_save(img, "bg_therapy.png")
+
+
+## grocery_run — a bright, busy shop: shelf rows of colourful goods under cool light.
+func _gen_store_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#b9c2bf"), Color("#cfd2c6"))   # cool fluorescent
+	# Ceiling light strips.
+	for lx in [60, 160, 260]:
+		_glow(img, lx, 8, 16.0, Color("#fbfdf2"))
+		_rect(img, lx - 18, 4, 36, 4, Color("#f4f6ea"))
+	# Floor.
+	_rect(img, 0, 150, BG_W, 30, Color("#a9a691"))
+	# Two shelf units stocked with colourful boxes/cans.
+	var goods := [Color("#c0533f"), Color("#d99a3d"), Color("#5e8a6b"), Color("#5d7fa8"), Color("#9a6b9d")]
+	for shelf in [{"x": 16, "w": 130}, {"x": 174, "w": 130}]:
+		var sx: int = shelf["x"]
+		var sw: int = shelf["w"]
+		_rect(img, sx, 40, sw, 110, Color("#8a8472"))         # unit
+		for row in range(3):
+			var ry: int = 50 + row * 34
+			_rect(img, sx + 4, ry + 22, sw - 8, 6, Color("#6e6a5a"))  # shelf board
+			var gx: int = sx + 6
+			var gi: int = row + (1 if sx > 100 else 0)
+			while gx < sx + sw - 12:
+				_rect(img, gx, ry, 14, 20, goods[gi % goods.size()])
+				gi += 1
+				gx += 18
+	_save(img, "bg_store.png")
+
+
+## the_shift — a workplace counter under a wall clock: focused, on-the-clock.
+func _gen_work_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#5b5a52"), Color("#6f6553"))
+	# Back shelving with stacked stock.
+	for y in [34, 60, 86]:
+		_rect(img, 20, y, 200, 5, Color("#3e3a31"))
+		var bx: int = 26
+		while bx < 214:
+			_rect(img, bx, y - 14, 16, 14, Color("#7a6a4e").darkened(0.05 * (bx % 3)))
+			bx += 22
+	# A wall clock, ticking.
+	_disc(img, 264, 44, 18.0, Color("#e7e2d2"))
+	_frame(img, 246, 26, 36, 36, Color("#2e2a22"), 1)
+	_px(img, 264, 44, Color("#2e2a22"))
+	for d in range(0, 10):
+		_px(img, 264, 44 - d, Color("#2e2a22"))      # minute hand up
+		_px(img, 264 + d, 44, Color("#5a4a36"))      # hour hand right
+	# Counter across the bottom.
+	_rect(img, 0, 118, BG_W, 62, Color("#4a4030"))
+	_rect(img, 0, 118, BG_W, 6, Color("#6a5a40"))
+	# A register on the counter.
+	_rect(img, 196, 96, 40, 26, Color("#33302a"))
+	_rect(img, 202, 100, 28, 10, Color("#7fa6b8"))
+	_save(img, "bg_work.png")
+
+
+## a_misunderstanding — a sidewalk by a building, daytime: an in-between, public place.
+func _gen_street_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	# Daytime sky.
+	_vgrad(img, 0, 0, BG_W, 96, Color("#9cc0dc"), Color("#d7e4d2"))
+	_glow(img, 270, 26, 26.0, Color("#fdf3cf"))
+	# Building facade behind.
+	_rect(img, 0, 70, BG_W, 70, Color("#9a7a5e"))
+	for wx in range(16, BG_W - 16, 52):
+		_rect(img, wx, 84, 30, 30, Color("#6f5f7e"))     # windows
+		_frame(img, wx, 84, 30, 30, Color("#4a3a2c"), 1)
+	# Sidewalk.
+	_rect(img, 0, 140, BG_W, 40, Color("#b0a999"))
+	for cx in range(0, BG_W, 40):
+		_rect(img, cx, 140, 2, 40, Color("#8f897a"))      # paving lines
+	# A bench.
+	_rect(img, 40, 130, 70, 8, Color("#6e4a30"))
+	_rect(img, 46, 138, 6, 14, Color("#5a3a24"))
+	_rect(img, 98, 138, 6, 14, Color("#5a3a24"))
+	# A small street tree.
+	_rect(img, 250, 120, 8, 22, Color("#5a3a28"))
+	_disc(img, 254, 110, 14.0, Color("#6f9a5c"))
+	_save(img, "bg_street.png")
 
 
 # --- leaves (particle sprites) ---
