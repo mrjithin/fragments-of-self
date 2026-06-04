@@ -25,11 +25,15 @@ func _earned_titles() -> Dictionary:
 func _ready() -> void:
 	GameState.reset_run()
 
-	# Fresh run: no alter has broken yet, so "Held Together" is already earned; the
-	# achievement-by-progress ones are not.
+	# Fresh run: nothing is earned yet — "Held Together" needs at least one
+	# survived day, so a brand-new game shows zero badges.
 	var t: Dictionary = _earned_titles()
-	_check("a clean run has earned 'Held Together'", t.has("Held Together"))
-	_check("nothing else earned on a fresh run", t.size() == 1)
+	_check("a fresh run has not earned 'Held Together'", not t.has("Held Together"))
+	_check("nothing earned on a fresh run", t.is_empty())
+
+	# Surviving a day without a breaking point earns 'Held Together'.
+	GameState.advance_day()
+	_check("a survived day earns 'Held Together'", _earned_titles().has("Held Together"))
 
 	# Integration: high final alignment.
 	GameState.ending_alignment = 6
@@ -57,8 +61,8 @@ func _ready() -> void:
 	_check("all four progress badges earned", _earned_titles().size() == 4)
 
 	GameState.reset_run()
-	_check("reset clears progress badges (clean run = Held Together only)",
-		_earned_titles().size() == 1)
+	_check("reset clears all badges (fresh run earns nothing)",
+		_earned_titles().is_empty())
 
 	print("=== sim_achievements done, failures: ", _failures, " ===")
 	get_tree().quit(_failures)
