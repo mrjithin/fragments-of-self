@@ -16,6 +16,7 @@ const TRACKS := {
 	"ambient_world":  [174.61, 220.00, 261.63, 329.63],   # Fmaj7  — neutral daylight
 	"ambient_mind":   [220.00, 261.63, 329.63, 392.00],   # Am7    — introspective
 	"ambient_dayend": [146.83, 220.00, 293.66, 369.99],   # Dmaj   — low, resolving
+	"ambient_ending": [261.63, 329.63, 493.88, 587.33],   # Cmaj9  — bright, hopeful dawn
 }
 
 

@@ -15,6 +15,7 @@ const SCENE_TRACKS := {
 	"res://scenes/external/external_world.tscn": "res://assets/audio/ambient_world.tres",
 	"res://scenes/internal/internal_mind.tscn": "res://assets/audio/ambient_mind.tres",
 	"res://scenes/ui/day_end_summary.tscn": "res://assets/audio/ambient_dayend.tres",
+	"res://scenes/ui/ending.tscn": "res://assets/audio/ambient_ending.tres",
 }
 const BOOT_TRACK: String = "res://assets/audio/ambient_title.tres"   # main scene = title
 
