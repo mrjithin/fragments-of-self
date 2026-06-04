@@ -26,7 +26,9 @@ static func _is_earned(id: String) -> bool:
 			var ratio: float = float(GameState.ending_alignment) / float(maxi(1, GameState.ALIGNMENT_MAX))
 			return ratio >= 0.6
 		"held_together":
-			return not GameState.ever_broke
+			# Needs at least one full day survived — otherwise a fresh run would
+			# trivially satisfy "no alter ever broke" before anything happened.
+			return GameState.day > 1 and not GameState.ever_broke
 		"whole_picture":
 			return GameState.unlocked_memories.size() >= CORE_MEMORIES
 		"aware":
