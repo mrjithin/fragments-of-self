@@ -1,0 +1,51 @@
+{
+	"background": "res://assets/art/bg_store.png",
+	"music": "res://assets/audio/amb_store.tres",
+	"start": "gr_1",
+	"task_id": "grocery_run",
+	"nodes": {
+		"gr_1": {
+			"speaker": "Narration",
+			"text": "The shop is packed. Fluorescent hum, a cart with a bad wheel, and somewhere near the till a voice is getting louder.",
+			"next": "gr_prep"
+		},
+		"gr_prep": {
+			"speaker": "Narration",
+			"text": "The list is short, but the noise is a lot. How to go in?",
+			"choices": [
+				{"text": "Steady and slow — breathe, one aisle at a time.", "next": "gr_into", "consequence": {"set_flag": "prep_eased"}},
+				{"text": "In and out fast — beat the crowd before it grows.", "next": "gr_into", "consequence": {"set_flag": "prep_pushed"}}
+			]
+		},
+		"gr_into": {
+			"speaker": "Narration",
+			"text": "The argument at the till sharpens. Carts jostle. Who can keep their footing in all this?",
+			"choices": [
+				{"text": "Look inward…", "action": "enter_mind"}
+			]
+		},
+		"gr_strong": {
+			"speaker": "Iris",
+			"text": "She lets the noise wash past, picks her line through the crowd, and is back out before it ever gets to her.",
+			"on_enter": {"surface_fact": "f_switching", "align": 2},
+			"next": "gr_done"
+		},
+		"gr_ok": {
+			"speaker": "June",
+			"text": "She gets it done, though the raised voices leave her a little rattled by the end.",
+			"on_enter": {"surface_fact": "f_switching", "align": 1},
+			"next": "gr_done"
+		},
+		"gr_strain": {
+			"speaker": "Rowan",
+			"text": "He pushes through it, but the chaos isn't his element — it costs him more than it should.",
+			"on_enter": {"surface_fact": "f_switching", "align": 0},
+			"next": "gr_done"
+		},
+		"gr_done": {
+			"speaker": "Narration",
+			"text": "Bags in hand, out into the quiet of the street. Done.",
+			"next": "END_TASK"
+		}
+	}
+}

@@ -1,46 +1,30 @@
 {
+	"_comment": "End-of-run badges. Display text lives here; each id's condition is evaluated in scripts/systems/achievements.gd against the final GameState. Kept gentle and encouraging, in keeping with the game's tone.",
 	"achievements": [
 		{
-			"id": "a_first_memory",
-			"title": "A Door Opens",
-			"desc": "Recover your first memory.",
-			"condition": {"kind": "memories_at_least", "value": 1}
+			"id": "integration",
+			"title": "Integration",
+			"desc": "Reached the integration path — the parts of the self, working as one."
 		},
 		{
-			"id": "a_all_memories",
-			"title": "The Whole of It",
-			"desc": "Recover every memory and see the past entire.",
-			"condition": {"kind": "memories_all"}
+			"id": "held_together",
+			"title": "Held Together",
+			"desc": "Made it through the run without any alter reaching a breaking point."
 		},
 		{
-			"id": "a_curious",
-			"title": "Willing to Understand",
-			"desc": "Learn three things about DID.",
-			"condition": {"kind": "facts_at_least", "value": 3}
+			"id": "whole_picture",
+			"title": "The Whole Picture",
+			"desc": "Recovered the core memories and pieced the past together."
 		},
 		{
-			"id": "a_informed",
-			"title": "Awareness",
-			"desc": "Learn every DID fact the story surfaces.",
-			"condition": {"kind": "facts_all"}
+			"id": "aware",
+			"title": "Aware",
+			"desc": "Surfaced every piece of real DID information along the way."
 		},
 		{
-			"id": "a_lived_it",
-			"title": "Learned the Hard Way",
-			"desc": "Discover an alter's trigger by living through it.",
-			"condition": {"kind": "trigger_discovered"}
-		},
-		{
-			"id": "a_together",
-			"title": "Together",
-			"desc": "Hold the system close to integration.",
-			"condition": {"kind": "alignment_at_least", "value": 6}
-		},
-		{
-			"id": "a_through_it",
-			"title": "All the Way Through",
-			"desc": "Reach the final day of the arc.",
-			"condition": {"kind": "day_at_least", "value": 5}
+			"id": "mediator",
+			"title": "Mediator",
+			"desc": "Mended a strained bond between alters through dialogue."
 		}
 	]
 }

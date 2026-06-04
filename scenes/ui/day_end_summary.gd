@@ -86,14 +86,18 @@ func _total_days() -> int:
 	return maxi(1, days.size())
 
 
-## How many of today's offered tasks the player never handled.
+## How many of today's offered tasks the player never handled. Counts against the
+## resolved list the board actually showed (main + any random secondaries), falling
+## back to the day's authored tasks if the board never populated it.
 func _count_skipped() -> int:
-	var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
-	if days.is_empty():
-		return 0
-	var idx: int = clampi(GameState.day - 1, 0, days.size() - 1)
-	var tasks: Array = (days[idx] as Dictionary).get("tasks", [])
-	return maxi(0, tasks.size() - GameState.completed_tasks.size())
+	var offered: int = GameState.day_tasks.size()
+	if offered == 0:
+		var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
+		if days.is_empty():
+			return 0
+		var idx: int = clampi(GameState.day - 1, 0, days.size() - 1)
+		offered = ((days[idx] as Dictionary).get("tasks", []) as Array).size()
+	return maxi(0, offered - GameState.completed_tasks.size())
 
 
 func _alignment_path(align: int, align_max: int) -> String:
