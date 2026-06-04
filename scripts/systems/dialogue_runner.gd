@@ -79,7 +79,9 @@ func _apply_on_enter(effects: Dictionary) -> void:
 		GameState.record_memory(mem)
 		EventBus.memory_unlocked.emit(mem)
 	var fact: String = effects.get("surface_fact", "")
-	if fact != "":
+	if fact != "" and not GameState.surfaced_facts.has(fact):
+		# First surfacing only — several dialogue nodes carry the same fact, and
+		# the popup repeating an already-learned note reads as a bug.
 		GameState.record_fact(fact)
 		EventBus.did_fact_surfaced.emit(fact)
 
