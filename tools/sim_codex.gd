@@ -20,10 +20,13 @@ func _ready() -> void:
 	GameState.record_memory("m_porch")
 	GameState.record_fact("f_switching")
 	GameState.discovered_triggers.append("deadlines")   # Rowan's, now learned
+	GameState.ending_alignment = 6                        # earns "Integration"
+	GameState.relationship_log.append({"pair": "iris|rowan"})  # earns "Mediator"
 
 	var codex: Control = load("res://scenes/ui/codex.tscn").instantiate()
 	add_child(codex)
 	await get_tree().process_frame
+	_check("the Journal builds all four tabs without crashing", is_instance_valid(codex))
 
 	var mem: Control = codex._build_memories()
 	_check("Memories tab lists each recovered memory", _count_entries(mem) == 2)
@@ -37,6 +40,14 @@ func _ready() -> void:
 	var sys_text: String = _all_text(sys)
 	_check("a discovered trigger is shown", sys_text.contains("Known trigger: deadlines"))
 	_check("an undiscovered trigger stays hidden", sys_text.contains("not yet known"))
+
+	# Milestones tab reflects the merged Achievements.earned() (Integration, Mediator,
+	# and the default Held Together for a run with no breaking point).
+	var mile: Control = codex._build_achievements()
+	var mile_text: String = _all_text(mile)
+	_check("Milestones tab lists every achievement", _count_entries(mile) >= 5)
+	_check("Milestones marks an earned badge (Integration ★)", mile_text.contains("★  Integration"))
+	_check("Milestones marks an unearned badge (Aware ☆)", mile_text.contains("☆  Aware"))
 
 	# Nothing discovered -> empty-state copy, not a crash.
 	GameState.reset_run()
