@@ -1,32 +1,28 @@
 {
-	"_comment": "Random 'event of the day' pool. One weighted, non-repeating event is rolled per day on the task board; 'fact' surfaces a DID fact (info loop). Gated by min_day/max_day.",
+	"_comment": "Random 'event of the day' pool. One weighted, non-repeating flavor event is rolled per day on the task board. Gated by min_day/max_day. (DID facts surface inside situations via surface_fact, not here.)",
 	"events": [
 		{
 			"id": "ev_quiet_morning",
 			"weight": 2,
 			"min_day": 1,
-			"fact": "f_alters",
 			"text": "A quiet morning. For now, the system feels almost in step — different voices, one direction."
 		},
 		{
 			"id": "ev_loud_neighbours",
 			"weight": 1,
 			"min_day": 1,
-			"fact": "f_switching",
 			"text": "Raised voices carry from next door. Something in them goes quietly alert — an old reflex, not a choice."
 		},
 		{
 			"id": "ev_good_sleep",
 			"weight": 1,
 			"min_day": 2,
-			"fact": "f_coconscious",
 			"text": "A full night's sleep, rare and whole. Today the inner chatter is gentler, more shared than separate."
 		},
 		{
 			"id": "ev_calendar_date",
 			"weight": 1,
 			"min_day": 3,
-			"fact": "f_origin",
 			"text": "A date on the calendar tightens something in the chest. No one inside says why, not yet."
 		}
 	]
