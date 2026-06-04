@@ -26,7 +26,6 @@ SaveManager="*res://autoload/save_manager.gd"
 Music="*res://autoload/music.gd"
 SceneFlow="*res://autoload/scene_flow.tscn"
 PauseMenu="*res://autoload/pause_menu.gd"
-Achievements="*res://autoload/achievements.gd"
 
 [display]
 

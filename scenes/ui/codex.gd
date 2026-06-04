@@ -8,6 +8,7 @@ extends Control
 const MEMORIES_PATH: String = "res://data/memories.json"
 const FACTS_PATH: String = "res://data/did_facts.json"
 const ALTERS_PATH: String = "res://data/alters.json"
+const ACHIEVEMENTS_PATH: String = "res://data/achievements.json"
 const BG_TEXTURE: String = "res://assets/art/bg_board.png"
 const RETURN_SCENE: String = "res://scenes/external/task_board.tscn"
 
@@ -132,18 +133,19 @@ func _build_system() -> Control:
 	return box
 
 
-# --- Helpers ---
-
 # --- Tab: Milestones (achievements) ---
 
 func _build_achievements() -> Control:
 	var box := _section()
-	var defs: Array = Achievements.all_defs()
-	var earned: Array = GameState.unlocked_achievements
-	box.add_child(_label("Earned  %d / %d" % [earned.size(), defs.size()], 15, COL_ACCENT))
+	var defs: Array = JsonLoader.load_dict(ACHIEVEMENTS_PATH).get("achievements", [])
+	# Achievements.earned() returns the earned ones as {title, desc}; match by title.
+	var earned_titles: Dictionary = {}
+	for e in Achievements.earned():
+		earned_titles[str((e as Dictionary).get("title", ""))] = true
+	box.add_child(_label("Earned  %d / %d" % [earned_titles.size(), defs.size()], 15, COL_ACCENT))
 	for d in defs:
 		var def: Dictionary = d as Dictionary
-		var got: bool = earned.has(str(def.get("id", "")))
+		var got: bool = earned_titles.has(str(def.get("title", "")))
 		var heading: String = "%s  %s" % ["★" if got else "☆", str(def.get("title", ""))]
 		var entry := _entry(heading, str(def.get("desc", "")))
 		if not got:

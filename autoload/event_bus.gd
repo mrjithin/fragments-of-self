@@ -17,7 +17,6 @@ signal alter_stress_changed(alter_id: String, stress: int)
 # --- Mystery / information ---
 signal memory_unlocked(memory_id: String)
 signal did_fact_surfaced(fact_id: String)
-signal achievement_unlocked(achievement_id: String)
 
 # --- Progression ---
 signal time_spent(amount: int, remaining: int)
