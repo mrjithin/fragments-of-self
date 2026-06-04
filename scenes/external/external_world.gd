@@ -159,6 +159,7 @@ func _play_outcome() -> void:
 	var broke: bool = after >= 100 and before < 100
 	if broke:
 		extra_align -= 1
+		GameState.ever_broke = true
 		notes.append("%s hit their breaking point — fragile for days." % alter.name)
 
 	if extra_align != 0:

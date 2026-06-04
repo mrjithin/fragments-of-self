@@ -100,6 +100,15 @@ func _compose(path: String) -> String:
 	lines.append("")
 	lines.append("[color=%s]Memories recovered: %d / %d   ·   Alignment: %d / %d[/color]" % [
 		COL_DIM.to_html(), found.size(), all_mem.size(), GameState.ending_alignment, GameState.ALIGNMENT_MAX])
+
+	# Earned badges — a small reward summary that also nudges replay for the misses.
+	var badges: Array[Dictionary] = Achievements.earned()
+	if not badges.is_empty():
+		lines.append("")
+		lines.append("[color=%s]Achievements earned:[/color]" % COL_ACCENT.to_html())
+		for b in badges:
+			lines.append("  ★ [b]%s[/b] — %s" % [b.get("title", ""), b.get("desc", "")])
+
 	lines.append("")
 	lines.append("[color=%s]DID is real, and so is recovery. People with DID can and do live full, meaningful lives.[/color]" % COL_GOOD.to_html())
 	return "\n".join(lines)
