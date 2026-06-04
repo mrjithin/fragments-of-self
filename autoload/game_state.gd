@@ -34,6 +34,7 @@ var unlocked_memories: Array[String] = []
 var surfaced_facts: Array[String] = []
 var seen_events: Array[String] = []    # random events already rolled (no-repeat, persists)
 var discovered_triggers: Array[String] = [] # triggers learned by hitting them (revealed on cards)
+var unlocked_achievements: Array[String] = [] # achievement ids earned this run
 
 
 func reset_run() -> void:
@@ -56,6 +57,7 @@ func reset_run() -> void:
 	surfaced_facts.clear()
 	seen_events.clear()
 	discovered_triggers.clear()
+	unlocked_achievements.clear()
 
 
 ## Total days in the run (from days.json, cached). Lets the HUD show "Day N of M".
@@ -136,6 +138,7 @@ func to_dict() -> Dictionary:
 		"surfaced_facts": surfaced_facts,
 		"seen_events": seen_events,
 		"discovered_triggers": discovered_triggers,
+		"unlocked_achievements": unlocked_achievements,
 	}
 
 
@@ -182,6 +185,10 @@ func from_dict(d: Dictionary) -> void:
 	discovered_triggers.clear()
 	for tg in d.get("discovered_triggers", []):
 		discovered_triggers.append(str(tg))
+
+	unlocked_achievements.clear()
+	for ach in d.get("unlocked_achievements", []):
+		unlocked_achievements.append(str(ach))
 
 
 func _to_int_dict(src: Dictionary) -> Dictionary:
