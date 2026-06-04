@@ -3,9 +3,11 @@ extends Node
 ## scene swaps between the External World and Internal Mind views.
 
 const ALIGNMENT_MAX: int = 10
+const DAYS_PATH: String = "res://data/days.json"
 
 # Progression
 var day: int = 1
+var _total_days_cache: int = 0         # lazily filled from days.json
 var ending_alignment: int = 0          # nudged by choices; drives the day-end meter
 var flags: Dictionary = {}             # arbitrary scripted flags, e.g. "conflict_resolved"
 
@@ -52,6 +54,14 @@ func reset_run() -> void:
 	surfaced_facts.clear()
 	seen_events.clear()
 	discovered_triggers.clear()
+
+
+## Total days in the run (from days.json, cached). Lets the HUD show "Day N of M".
+func total_days() -> int:
+	if _total_days_cache <= 0:
+		var days: Array = JsonLoader.load_dict(DAYS_PATH).get("days", [])
+		_total_days_cache = maxi(1, days.size())
+	return _total_days_cache
 
 
 ## Move to the next day: bump the counter and clear per-day state, while keeping
