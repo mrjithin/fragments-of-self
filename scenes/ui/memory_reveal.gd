@@ -58,6 +58,9 @@ func _on_memory_unlocked(memory_id: String) -> void:
 	if not _memories.has(memory_id):
 		return
 	var mem := MemoryFragment.from_dict(memory_id, _memories[memory_id])
+	# A memory with an image is handled by the jigsaw overlay instead.
+	if mem.image != "" and ResourceLoader.exists(mem.image):
+		return
 	_title.text = mem.title
 	# Prefer the authored ordered fragments; fall back to splitting the prose.
 	_ordered = mem.fragments.duplicate() if not mem.fragments.is_empty() else _split_pieces(mem.text)
