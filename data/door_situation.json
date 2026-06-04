@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_threshold.png",
+	"music": "res://assets/audio/amb_threshold.tres",
 	"start": "dr_1",
 	"task_id": "stand_ground",
 	"nodes": {

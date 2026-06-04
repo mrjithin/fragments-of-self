@@ -44,6 +44,14 @@ func _on_scene_changed(scene_path: String) -> void:
 		_play_track(track, false)
 
 
+## Play a specific track for the current situation, overriding the scene-mapped one.
+## Falls back gracefully if the file is missing (keeps the current ambience).
+func play_for_situation(track_path: String) -> void:
+	if track_path == "" or not ResourceLoader.exists(track_path):
+		return
+	_play_track(track_path, false)
+
+
 ## Crossfade the active player out and a fresh one in (or hard-cut on boot).
 func _play_track(track_path: String, instant: bool) -> void:
 	if track_path == _current_track:

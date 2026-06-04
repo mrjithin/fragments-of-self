@@ -17,6 +17,18 @@ const TRACKS := {
 	"ambient_mind":   [220.00, 261.63, 329.63, 392.00],   # Am7    — introspective
 	"ambient_dayend": [146.83, 220.00, 293.66, 369.99],   # Dmaj   — low, resolving
 	"ambient_ending": [261.63, 329.63, 493.88, 587.33],   # Cmaj9  — bright, hopeful dawn
+
+	# Per-situation motifs. Each task gets its own chord/register so the place sounds
+	# distinct from the others, while staying within the cozy/consonant palette.
+	"amb_kitchen":    [261.63, 392.00, 523.25, 659.25],   # C maj, high  — bright morning
+	"amb_doorstep":   [196.00, 246.94, 293.66, 392.00],   # G maj        — open, helpful
+	"amb_desk":       [130.81, 196.00, 233.08, 311.13],   # C min, low   — heavy, tense bills
+	"amb_hallway":    [164.81, 220.00, 246.94, 329.63],   # E min add    — small, uncertain
+	"amb_threshold":  [146.83, 174.61, 220.00, 293.66],   # D min        — firm, guarded
+	"amb_nightphone": [220.00, 277.18, 329.63, 415.30],   # A maj, soft  — late, worried
+	"amb_nightcall":  [110.00, 164.81, 207.65, 246.94],   # A min, deep  — quiet dread/longing
+	"amb_waiting":    [174.61, 261.63, 349.23, 440.00],   # F maj, airy  — sterile calm
+	"amb_therapy":    [196.00, 293.66, 349.23, 440.00],   # G maj7-ish   — warm, safe
 }
 
 

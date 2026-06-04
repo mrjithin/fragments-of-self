@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_desk.png",
+	"music": "res://assets/audio/amb_desk.tres",
 	"start": "b_1",
 	"task_id": "overdue_bills",
 	"nodes": {

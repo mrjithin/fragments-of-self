@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_nightcall.png",
+	"music": "res://assets/audio/amb_nightcall.tres",
 	"start": "d3_intro_1",
 	"task_id": "hard_conversation",
 	"nodes": {

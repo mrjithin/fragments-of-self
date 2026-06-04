@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_therapy.png",
+	"music": "res://assets/audio/amb_therapy.tres",
 	"start": "t_1",
 	"task_id": "the_telling",
 	"nodes": {

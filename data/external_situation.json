@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_kitchen.png",
+	"music": "res://assets/audio/amb_kitchen.tres",
 	"start": "ext_intro_1",
 	"task_id": "job_interview",
 	"nodes": {

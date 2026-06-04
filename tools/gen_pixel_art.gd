@@ -25,6 +25,7 @@ func _ready() -> void:
 	_gen_board_bg()
 	_gen_dayend_bg()
 	_gen_ending_bg()
+	_gen_situation_bgs()
 	_gen_leaves()
 	for id in ALTERS:
 		_gen_portrait(id, Color(ALTERS[id]["color"]), ALTERS[id]["mouth"])
@@ -318,6 +319,236 @@ func _gen_ending_bg() -> void:
 			for y in range(hy, BG_H):
 				img.set_pixel(x, y, layer["color"])
 	_save(img, "bg_ending.png")
+
+
+# --- per-situation backgrounds ---
+# Shared blocky helpers so each room stays consistent in style but distinct in place.
+
+func _rect(img: Image, x0: int, y0: int, w: int, h: int, c: Color) -> void:
+	for y in range(y0, y0 + h):
+		for x in range(x0, x0 + w):
+			_px(img, x, y, c)
+
+
+func _vgrad(img: Image, x0: int, y0: int, w: int, h: int, top: Color, bot: Color) -> void:
+	for y in range(y0, y0 + h):
+		var t: float = float(y - y0) / maxf(1.0, float(h))
+		var row: Color = top.lerp(bot, t)
+		for x in range(x0, x0 + w):
+			_px(img, x, y, row)
+
+
+func _fill(img: Image, top: Color, bot: Color) -> void:
+	_vgrad(img, 0, 0, BG_W, BG_H, top, bot)
+
+
+func _frame(img: Image, x0: int, y0: int, w: int, h: int, c: Color, th: int = 2) -> void:
+	for t in range(th):
+		for x in range(x0 - t, x0 + w + t):
+			_px(img, x, y0 - 1 - t, c)
+			_px(img, x, y0 + h + t, c)
+		for y in range(y0 - t, y0 + h + t):
+			_px(img, x0 - 1 - t, y, c)
+			_px(img, x0 + w + t, y, c)
+
+
+func _gen_situation_bgs() -> void:
+	_gen_kitchen_bg()
+	_gen_doorstep_bg()
+	_gen_desk_bg()
+	_gen_hallway_bg()
+	_gen_threshold_bg()
+	_gen_nightphone_bg()
+	_gen_nightcall_bg()
+	_gen_waiting_bg()
+	_gen_therapy_bg()
+
+
+## job_interview — a kitchen at morning, an opened letter on the table.
+func _gen_kitchen_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#caa56e"), Color("#a9824f"))
+	# Window of bright morning light, right side.
+	_vgrad(img, 206, 26, 86, 78, Color("#bfd2e6"), Color("#fbe3a6"))
+	_glow(img, 250, 44, 22.0, Color("#fff3c8"))
+	_frame(img, 206, 26, 86, 78, Color("#5a3c26"))
+	for y in range(26, 104):
+		_px(img, 249, y, Color("#5a3c26"))
+	for x in range(206, 292):
+		_px(img, x, 65, Color("#5a3c26"))
+	# Counter/table band across the lower third.
+	_rect(img, 0, 120, BG_W, 60, Color("#7a5333"))
+	_rect(img, 0, 120, BG_W, 5, Color("#8f6440"))
+	# A plate + the opened letter on the table.
+	_disc(img, 96, 142, 13.0, Color("#e7ddcb"))
+	_disc(img, 96, 142, 9.0, Color("#d8cbb2"))
+	_rect(img, 150, 132, 46, 30, Color("#efe7d4"))   # letter
+	for li in [8, 14, 20]:
+		for x in range(154, 192):
+			_blend(img, x, 132 + li, Color("#6a5a44"), 0.5)
+	# A mug, steaming.
+	_rect(img, 230, 134, 16, 18, Color("#9c4f3a"))
+	for x in [236, 240]:
+		_blend(img, x, 128, Color("#fff", 0), 0.0)
+	_save(img, "bg_kitchen.png")
+
+
+## neighbour_help — a doorway onto daylight, stacked moving boxes.
+func _gen_doorstep_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#caa07a"), Color("#9c7a5b"))   # interior wall, warm
+	# Open door on the left showing bright outdoors.
+	_vgrad(img, 18, 24, 96, 140, Color("#acd0e0"), Color("#dcecc0"))
+	_glow(img, 60, 50, 30.0, Color("#fdf3cf"))
+	_rect(img, 18, 150, 96, 14, Color("#7e9a5e"))    # grass strip outside
+	_frame(img, 18, 24, 96, 140, Color("#4a3324"), 3)
+	# Floor.
+	_rect(img, 0, 150, BG_W, 30, Color("#6e4d33"))
+	# Stacked cardboard boxes on the right.
+	var box := Color("#b98a52")
+	var box_d := Color("#8f6238")
+	for b in [[176, 110, 52, 50], [232, 96, 56, 64], [196, 60, 48, 48]]:
+		var bx: int = b[0]
+		var by: int = b[1]
+		_rect(img, bx, by, b[2], b[3], box)
+		_frame(img, bx, by, b[2], b[3], box_d, 1)
+		# tape line
+		_rect(img, bx, by + b[3] / 2 - 2, b[2], 4, box_d)
+	_save(img, "bg_doorstep.png")
+
+
+## overdue_bills — a dim desk, a red-stamped envelope, a lamp's pool of light.
+func _gen_desk_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#2e2630"), Color("#43342f"))
+	# Lamp glow from upper-left.
+	_glow(img, 54, 30, 70.0, Color("#e9b96a"))
+	_disc(img, 54, 22, 8.0, Color("#ffd98a"))
+	# Desk surface.
+	_rect(img, 0, 118, BG_W, 62, Color("#4a3322"))
+	_rect(img, 0, 118, BG_W, 5, Color("#5e422c"))
+	# Stack of papers + the red-stamped envelope.
+	_rect(img, 70, 128, 60, 40, Color("#d8cdb6"))
+	_rect(img, 76, 122, 60, 40, Color("#e7ddc8"))
+	_rect(img, 150, 130, 70, 34, Color("#e4d9c2"))   # envelope
+	_frame(img, 150, 130, 70, 34, Color("#b0a384"), 1)
+	_rect(img, 196, 134, 16, 12, Color("#b23a2c"))   # red stamp
+	_save(img, "bg_desk.png")
+
+
+## calm_the_child — an apartment hallway, a row of doors, low light.
+func _gen_hallway_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#534056"), Color("#6e5346"))
+	# Receding side walls (darker) framing a lit far wall.
+	for x in BG_W:
+		var edge: float = abs(float(x) - 160.0) / 160.0    # 0 center -> 1 edges
+		for y in range(0, 150):
+			var c: Color = img.get_pixel(x, y)
+			_px(img, x, y, c.darkened(0.45 * edge))
+	# Floor runner.
+	_rect(img, 0, 150, BG_W, 30, Color("#3e2c33"))
+	_rect(img, 120, 150, 80, 30, Color("#5a3f48"))
+	# A few doors along the hall.
+	for dx in [40, 132, 224]:
+		_rect(img, dx, 70, 40, 80, Color("#7a5a44"))
+		_frame(img, dx, 70, 40, 80, Color("#2e2026"), 1)
+		_disc(img, dx + 34, 112, 1.5, Color("#e7c878"))   # handle
+	# A soft ceiling light over the middle door.
+	_glow(img, 152, 64, 26.0, Color("#f2d79a"))
+	_save(img, "bg_hallway.png")
+
+
+## stand_ground — a threshold at dusk, a firm doorframe, a figure's silhouette outside.
+func _gen_threshold_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#2a2336"), Color("#5a3f49"))   # dim interior
+	# Doorway opening onto a dusk sky.
+	_vgrad(img, 104, 20, 112, 150, Color("#5b4f7e"), Color("#d98a64"))
+	_glow(img, 160, 120, 26.0, Color("#f1b070"))
+	# A standing silhouette in the doorway (the acquaintance).
+	_disc(img, 160, 84, 12.0, Color("#1c1722"))
+	_rect(img, 148, 96, 24, 60, Color("#1c1722"))
+	_frame(img, 104, 20, 112, 150, Color("#241a24"), 4)
+	_rect(img, 0, 156, BG_W, 24, Color("#241a26"))   # interior floor
+	_save(img, "bg_threshold.png")
+
+
+## friend_crisis — evening room, a phone buzzing on the table, its screen glowing.
+func _gen_nightphone_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#1d2238"), Color("#33304a"))
+	# Night window.
+	_vgrad(img, 30, 26, 80, 70, Color("#0e1326"), Color("#26203a"))
+	_frame(img, 30, 26, 80, 70, Color("#2c2740"))
+	for x in range(30, 110):
+		_px(img, x, 61, Color("#2c2740"))
+	for y in range(26, 96):
+		_px(img, 70, y, Color("#2c2740"))
+	# Table + the phone with a cold glow.
+	_rect(img, 0, 124, BG_W, 56, Color("#2b2336"))
+	_glow(img, 190, 132, 26.0, Color("#7fa6d8"))
+	_rect(img, 178, 124, 24, 16, Color("#101524"))
+	_rect(img, 181, 126, 18, 12, Color("#9cc4f0"))   # screen
+	_save(img, "bg_nightphone.png")
+
+
+## hard_conversation — deep night, a single warm lamp, a voicemail's quiet weight.
+func _gen_nightcall_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#141426"), Color("#241f33"))
+	# Single warm lamp, lower-right, carving a small pool of light.
+	_glow(img, 236, 96, 78.0, Color("#d99a58"))
+	_glow(img, 236, 96, 30.0, Color("#f3c483"))
+	_disc(img, 236, 78, 7.0, Color("#ffe0a0"))
+	_rect(img, 232, 96, 8, 40, Color("#3a2c22"))     # lamp stem
+	# Floor/table edge catching the light.
+	_rect(img, 0, 150, BG_W, 30, Color("#1c1828"))
+	for x in range(150, BG_W):
+		_blend(img, x, 150, Color("#e0a868"), 0.3 * (float(x - 150) / 170.0))
+	_save(img, "bg_nightcall.png")
+
+
+## the_appointment — a clinic waiting room, pale and quiet, chairs and a named door.
+func _gen_waiting_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#9fb0a6"), Color("#c2c9bc"))   # cool, pale, clinical
+	# Floor.
+	_rect(img, 0, 140, BG_W, 40, Color("#b8a98c"))
+	# A door with a name plate, centre-right.
+	_rect(img, 196, 44, 56, 96, Color("#d8d2c4"))
+	_frame(img, 196, 44, 56, 96, Color("#8a8576"), 2)
+	_rect(img, 206, 60, 36, 10, Color("#e9e4d6"))    # name plate
+	_disc(img, 244, 94, 1.6, Color("#7a756a"))
+	# A row of waiting chairs along the left.
+	for cx in [24, 70, 116]:
+		_rect(img, cx, 110, 34, 22, Color("#6f8f9c"))   # seat
+		_rect(img, cx, 92, 34, 20, Color("#5e7d8a"))    # back
+	# A potted plant by the door.
+	_rect(img, 170, 120, 14, 20, Color("#7a5236"))
+	_disc(img, 177, 110, 10.0, Color("#5e8a52"))
+	_save(img, "bg_waiting.png")
+
+
+## the_telling — a warm therapy room, two chairs facing, a rug: safety, resolution.
+func _gen_therapy_bg() -> void:
+	var img := _new_img(BG_W, BG_H)
+	_fill(img, Color("#6e4f48"), Color("#8a6450"))   # warm, cozy
+	# Soft lamp glow upper-right.
+	_glow(img, 270, 36, 56.0, Color("#f1c884"))
+	# Floor + a centred rug.
+	_rect(img, 0, 140, BG_W, 40, Color("#5a3e34"))
+	_rect(img, 96, 150, 128, 26, Color("#a85a44"))
+	_frame(img, 96, 150, 128, 26, Color("#c98a5e"), 1)
+	# Two armchairs facing each other.
+	_rect(img, 40, 104, 50, 40, Color("#7c5a8c"))    # left chair seat/back
+	_rect(img, 40, 96, 50, 14, Color("#6c4a7c"))
+	_rect(img, 230, 104, 50, 40, Color("#6f9a7b"))   # right chair
+	_rect(img, 230, 96, 50, 14, Color("#5e8a6b"))
+	# A small plant between them, in the warm light.
+	_rect(img, 156, 120, 10, 16, Color("#5a3a2c"))
+	_disc(img, 161, 112, 9.0, Color("#6aa05c"))
+	_save(img, "bg_therapy.png")
 
 
 # --- leaves (particle sprites) ---

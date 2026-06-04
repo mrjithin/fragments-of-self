@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_waiting.png",
+	"music": "res://assets/audio/amb_waiting.tres",
 	"start": "d4_intro_1",
 	"task_id": "the_appointment",
 	"nodes": {

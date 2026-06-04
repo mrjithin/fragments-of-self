@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_hallway.png",
+	"music": "res://assets/audio/amb_hallway.tres",
 	"start": "c_1",
 	"task_id": "calm_the_child",
 	"nodes": {

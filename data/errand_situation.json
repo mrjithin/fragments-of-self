@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_doorstep.png",
+	"music": "res://assets/audio/amb_doorstep.tres",
 	"start": "er_1",
 	"task_id": "neighbour_help",
 	"nodes": {

@@ -7,12 +7,17 @@ const SITUATION_PATH: String = "res://data/external_situation.json"
 const TASKS_PATH: String = "res://data/tasks.json"
 const INTERNAL_SCENE: String = "res://scenes/internal/internal_mind.tscn"
 const TASK_BOARD_SCENE: String = "res://scenes/external/task_board.tscn"
+const READ_STEP: int = 4               # time drained per dialogue beat as the player reads
+const DEFAULT_BG: String = "res://assets/art/bg_external.png"
 
 @onready var _box: DialogueBox = %DialogueBox
+@onready var _bg: TextureRect = $BgLayer/Background
+@onready var _leaves: Node2D = $Leaves
 
 var _runner: DialogueRunner
 var _situation: Dictionary = {}
 var _task: Task
+var _task_budget: int = 0              # this task's total time_cost, drained across the read
 
 
 func _ready() -> void:
@@ -20,12 +25,26 @@ func _ready() -> void:
 	var sit_path: String = GameState.current_situation if GameState.current_situation != "" else SITUATION_PATH
 	_situation = JsonLoader.load_dict(sit_path)
 	_task = _load_task(_situation.get("task_id", ""))
+	_task_budget = _task.time_cost if _task else 0
+
+	# Per-situation pixel art + ambience, so each task looks and sounds like its own place.
+	var bg_path: String = str(_situation.get("background", DEFAULT_BG))
+	if bg_path != "" and ResourceLoader.exists(bg_path):
+		_bg.texture = load(bg_path)
+	var music_path: String = str(_situation.get("music", ""))
+	if music_path != "":
+		Music.play_for_situation(music_path)
+	# Falling leaves suit the outdoor autumn fallback; indoor situations (each with
+	# its own background) turn them off. A situation can override with a "leaves" flag.
+	if _leaves:
+		_leaves.visible = bool(_situation.get("leaves", not _situation.has("background")))
 
 	_runner = DialogueRunner.new()
 	add_child(_runner)
 	_runner.setup(_situation, _box)
 	_runner.action_triggered.connect(_on_action)
 	_runner.finished.connect(_on_finished)
+	_runner.node_shown.connect(_on_node_shown)
 
 	if GameState.assigned_alter_id != "" and not GameState.has_flag("outcome_played"):
 		_play_outcome()
@@ -52,6 +71,17 @@ func _load_task(task_id: String) -> Task:
 	return Task.from_dict(task_id, tasks[task_id])
 
 
+## Drain the task's time budget a little on each dialogue beat, so the HUD meter
+## visibly moves while the player reads instead of jumping only at the outcome.
+## Tracked in GameState (not on this node) so it survives the mind round-trip — the
+## scene is rebuilt on return, but the total charged still sums to the task's time_cost.
+func _on_node_shown(_node_id: String) -> void:
+	var step: int = mini(READ_STEP, _task_budget - GameState.task_time_spent)
+	if step > 0:
+		GameState.task_time_spent += step
+		GameClock.spend(step)
+
+
 func _on_action(action: String) -> void:
 	if action == "enter_mind":
 		GameState.current_task_id = _task.id if _task else ""
@@ -69,8 +99,6 @@ func _on_action(action: String) -> void:
 func _play_outcome() -> void:
 	GameState.set_flag("outcome_played")
 	var assigned: String = GameState.assigned_alter_id
-	if _task:
-		GameClock.spend(_task.time_cost)
 
 	var alter_mgr := AlterManager.new()
 	alter_mgr.load_data()
@@ -151,6 +179,11 @@ func _play_outcome() -> void:
 
 func _on_finished(end_id: String) -> void:
 	if end_id == "END_TASK" or end_id == "END_DAY":
+		# Charge any of the task's time the read didn't reach, so the full time_cost
+		# is always paid (short branches don't get the task done "for free").
+		var remainder: int = _task_budget - GameState.task_time_spent
+		if remainder > 0:
+			GameClock.spend(remainder)
 		# Task complete — mark it done and hand control back to the day's task board.
 		if GameState.current_situation != "" and not GameState.completed_tasks.has(GameState.current_situation):
 			GameState.completed_tasks.append(GameState.current_situation)

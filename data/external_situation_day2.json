@@ -1,4 +1,6 @@
 {
+	"background": "res://assets/art/bg_nightphone.png",
+	"music": "res://assets/audio/amb_nightphone.tres",
 	"start": "d2_intro_1",
 	"task_id": "friend_crisis",
 	"nodes": {
