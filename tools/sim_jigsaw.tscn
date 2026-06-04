@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tools/sim_jigsaw.gd" id="1_simjig"]
+
+[node name="SimJigsaw" type="Node"]
+script = ExtResource("1_simjig")
