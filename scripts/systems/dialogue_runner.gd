@@ -8,6 +8,7 @@ extends Node
 signal finished(end_id: String)
 signal consequence_applied(consequence: Dictionary)
 signal action_triggered(action: String)
+signal node_shown(node_id: String)   # a real dialogue node just rendered
 
 var _nodes: Dictionary = {}        # id -> DialogueNode
 var _box: DialogueBox
@@ -45,6 +46,7 @@ func _goto(node_id: String) -> void:
 	_current = _nodes[node_id]
 	_apply_on_enter(_current.on_enter)
 	_box.show_node(_current)
+	node_shown.emit(node_id)
 
 
 func _on_advance() -> void:

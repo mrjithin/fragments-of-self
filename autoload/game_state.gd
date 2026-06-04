@@ -17,6 +17,7 @@ var assigned_alter_id: String = ""     # alter chosen in the mind to handle it
 var current_scene: String = ""         # last gameplay scene, for resume-on-Continue
 var last_outcome_penalty: int = 0      # alignment lost to a strained assigned alter (per day)
 var current_situation: String = ""     # situation chosen from the task board
+var task_time_spent: int = 0           # reading time already charged for the current task (persists across the mind round-trip)
 var completed_tasks: Array[String] = [] # situation paths finished today
 var current_event_text: String = ""    # the day's rolled random event line (shown on board)
 
@@ -44,6 +45,7 @@ func reset_run() -> void:
 	current_scene = ""
 	last_outcome_penalty = 0
 	current_situation = ""
+	task_time_spent = 0
 	current_event_text = ""
 	completed_tasks.clear()
 	alter_stress.clear()
@@ -73,6 +75,7 @@ func advance_day() -> void:
 	assigned_alter_id = ""
 	last_outcome_penalty = 0
 	current_situation = ""
+	task_time_spent = 0
 	current_event_text = ""
 	completed_tasks.clear()
 	relationship_log.clear()
@@ -85,6 +88,7 @@ func reset_task() -> void:
 	assigned_alter_id = ""
 	current_task_id = ""
 	current_situation = ""
+	task_time_spent = 0
 	flags.erase("outcome_played")
 
 
